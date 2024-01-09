@@ -57,11 +57,12 @@ $(document).ready(function() {
     if (menu.length) {
       $(window).on("scroll", function() {
         var topDistance = menu.offset().top;
+	console.log(topDistance);
 
         // hide only the navigation links on desktop
-        if (!nav.is(":visible") && topDistance < 50) {
+        if (!nav.is(":visible") && topDistance < 1000) {
           nav.show();
-        } else if (nav.is(":visible") && topDistance > 100) {
+        } else if (nav.is(":visible") && topDistance > 1000) {
           nav.hide();
         }
 
@@ -88,7 +89,7 @@ $(document).ready(function() {
 
         if (topDistance > lastScrollTop){
           // downscroll -> show menu
-          $("#footer-post").show();
+          $("#footer-post").hide();
         } else {
           // upscroll -> hide menu
           $("#footer-post").show();
@@ -103,7 +104,7 @@ $(document).ready(function() {
         // show a "navigation" icon when close to the top of the page, 
         // otherwise show a "scroll to the top" icon
         if (topDistance < 50) {
-          $("#actions-footer > #top").hide();
+          $("#actions-footer > #top").show();
         } else if (topDistance > 100) {
           $("#actions-footer > #top").show();
         }
