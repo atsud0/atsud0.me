@@ -765,7 +765,7 @@ body {
   color: #2bbc8a;
 }
 #header-post #menu {
-  display: none;
+  display: inline;
   margin-right: 2rem;
 }
 #header-post #nav {

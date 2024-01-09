@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="0x01 介绍本文基于frp 0.38.1版本进行的修改。 克隆最新frp版本，开始进行修改，由于我是不会go的废物 基本上都是按照着大佬的文章进行修改，所以本文算是简单记录下我改的地方，和学习go的笔记，并没有什么新东西。 0x02 FRP流量特征修改客户端启动时，会向服务端发送认证信息。（图中version是已被修改过的信息）  修改版本号信息，pkg&#x2F;utils&#x2F;version.go处，需要">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FRP改造笔记">
+<meta property="og:url" content="https://atsud0.me/2022/01/FRP%E6%94%B9%E9%80%A0%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="雪之下二丁目鹤岗八幡宫">
+<meta property="og:description" content="0x01 介绍本文基于frp 0.38.1版本进行的修改。 克隆最新frp版本，开始进行修改，由于我是不会go的废物 基本上都是按照着大佬的文章进行修改，所以本文算是简单记录下我改的地方，和学习go的笔记，并没有什么新东西。 0x02 FRP流量特征修改客户端启动时，会向服务端发送认证信息。（图中version是已被修改过的信息）  修改版本号信息，pkg&#x2F;utils&#x2F;version.go处，需要">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220115-16:51:31-_cB1G0H_aPQLzc_cB1G0H_1642236691283_cB1G0H_aPQLzc.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220115-16:54:18-_F0MSBa_URIs0w_F0MSBa_1642236858170_F0MSBa_URIs0w.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220115-18:48:33-_RHZp9p_bvHDjh_RHZp9p_1642243713245_RHZp9p_bvHDjh.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220115-18:45:17-_DTkGGl_oiPevl_DTkGGl_1642243517078_DTkGGl_oiPevl.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220115-19:14:17-_FPvBLC_JVX4fR_FPvBLC_1642245257345_FPvBLC_JVX4fR.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220115-19:22:55-_GqWaPr_n5CTb8_GqWaPr_1642245775654_GqWaPr_n5CTb8.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220115-19:39:53-_qwl5PS_h2o2AF_qwl5PS_1642246793115_qwl5PS_h2o2AF.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220115-19:44:02-_3DAva1_MSkBiY_3DAva1_1642247042425_3DAva1_MSkBiY.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220116-00:43:47-_j3FdCB_txhy5Y_j3FdCB_1642265027721_j3FdCB_txhy5Y.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220116-00:42:07-_xo1sEG_yzydGl_xo1sEG_1642264927458_xo1sEG_yzydGl.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220116-00:50:32-_TWNaYA_UqZn9O_TWNaYA_1642265432758_TWNaYA_UqZn9O.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220115-23:50:30-_nu3hNn_407LJp_nu3hNn_1642261830764_nu3hNn_407LJp.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220115-23:54:54-_wFkdyQ_KbEPbw_wFkdyQ_1642262094456_wFkdyQ_KbEPbw.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220116-10:15:51-_zGmFms_wUFxF7_zGmFms_1642299351060_zGmFms_wUFxF7.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220117-13:18:07-_RLZUUQ_WJvggH_RLZUUQ_1642396687332_RLZUUQ_WJvggH.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220117-13:42:18-_pFjJJJ_JjOvff_pFjJJJ_1642398138010_pFjJJJ_JjOvff.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220117-13:19:47-_WFNfES_z2T17J_WFNfES_1642396787195_WFNfES_z2T17J.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220117-13:44:37-_FOqGSR_p2celn_FOqGSR_1642398277831_FOqGSR_p2celn.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220116-02:20:03-_gmu3gi_V2MM5O_gmu3gi_1642270803570_gmu3gi_V2MM5O.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220118-20:56:12-_Juz35M_atgqwZ_Juz35M_1642510572406_Juz35M_atgqwZ.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220120-16:19:10-_V3EqTc_mf41EO_V3EqTc_1642666750508_V3EqTc_mf41EO.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220120-17:06:31-_5ipo6Y_WjgknA_5ipo6Y_1642669591717_5ipo6Y_WjgknA.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220120-16:27:31-_p7fHgn_0MqPbE_p7fHgn_1642667251049_p7fHgn_0MqPbE.jpg">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220120-16:26:44-_lljH1O_59MI5e_lljH1O_1642667204858_lljH1O_59MI5e.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220120-17:32:06-_Fj2s4T_Untitled-frp_Fj2s4T_1642671126256_Fj2s4T_Untitled-frp.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220118-14:54:03-_WpbaQh_NXulMk_WpbaQh_1642488843723_WpbaQh_NXulMk.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220118-14:59:30-_N81AtY_toKvRT_N81AtY_1642489170431_N81AtY_toKvRT.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220118-15:03:10-_AesSFV_zeKgK5_AesSFV_1642489390727_AesSFV_zeKgK5.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220118-17:53:02-_FqxEDB_obKUDi_FqxEDB_1642499582654_FqxEDB_obKUDi.png">
+<meta property="article:published_time" content="2022-01-20T09:15:26.000Z">
+<meta property="article:modified_time" content="2022-01-25T10:17:26.000Z">
+<meta property="article:author" content="atsud0">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://images.atsud0.me/images/post/20220115-16:51:31-_cB1G0H_aPQLzc_cB1G0H_1642236691283_cB1G0H_aPQLzc.png">
+    
+    
+      
+        
+          
+            <link rel="shortcut icon" href="https://www.gravatar.com/avatar/833e6979e17dd10aebe34f34c0fd5f7d?s=48">
+          
+        
+      
+      
+        
+          
+            <link rel="icon" type="image/png" href="https://www.gravatar.com/avatar/833e6979e17dd10aebe34f34c0fd5f7d?s=192" sizes="192x192">
+          
+        
+      
+      
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="https://www.gravatar.com/avatar/833e6979e17dd10aebe34f34c0fd5f7d?s=180">
+          
+        
+      
+    
+    <!-- title -->
+    <title>FRP改造笔记</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-163969429-1"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-163969429-1');
+  </script>
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="雪之下二丁目鹤岗八幡宫" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/links/">Friends</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/atsud0">Github</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2022/01/%E3%80%90%E9%92%93%E9%B1%BC%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83%E3%80%91-RTF%E6%96%87%E6%A1%A3/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2022/01/%E3%80%90%E9%92%93%E9%B1%BC%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83%E3%80%91-CHM%E6%96%87%E4%BB%B6%E7%AC%94%E8%AE%B0/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://atsud0.me/2022/01/FRP%E6%94%B9%E9%80%A0%E7%AC%94%E8%AE%B0/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://atsud0.me/2022/01/FRP%E6%94%B9%E9%80%A0%E7%AC%94%E8%AE%B0/&text=FRP改造笔记"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://atsud0.me/2022/01/FRP%E6%94%B9%E9%80%A0%E7%AC%94%E8%AE%B0/&title=FRP改造笔记"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=FRP改造笔记&body=Check out this article: https://atsud0.me/2022/01/FRP%E6%94%B9%E9%80%A0%E7%AC%94%E8%AE%B0/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://atsud0.me/2022/01/FRP%E6%94%B9%E9%80%A0%E7%AC%94%E8%AE%B0/&title=FRP改造笔记"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://atsud0.me/2022/01/FRP%E6%94%B9%E9%80%A0%E7%AC%94%E8%AE%B0/&name=FRP改造笔记&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://atsud0.me/2022/01/FRP%E6%94%B9%E9%80%A0%E7%AC%94%E8%AE%B0/&t=FRP改造笔记"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">0x01 介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-FRP%E6%B5%81%E9%87%8F%E7%89%B9%E5%BE%81%E4%BF%AE%E6%94%B9"><span class="toc-number">2.</span> <span class="toc-text">0x02 FRP流量特征修改</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-%E5%8A%9F%E8%83%BD%E6%94%B9%E9%80%A0"><span class="toc-number">3.</span> <span class="toc-text">0x03 功能改造</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-%E5%9F%9F%E5%89%8D%E7%BD%AE%E9%9A%90%E8%97%8Ffrp"><span class="toc-number">4.</span> <span class="toc-text">0x04 域前置隐藏frp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05-%E5%8E%8B%E7%BC%A9%E4%BD%93%E7%A7%AF-amp-%E4%BB%A3%E7%A0%81%E6%B7%B7%E6%B7%86"><span class="toc-number">5.</span> <span class="toc-text">0x05 压缩体积&amp;代码混淆</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x06-%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">6.</span> <span class="toc-text">0x06 参考链接</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        FRP改造笔记
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">atsud0</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-01-20T09:15:26.000Z" class="dt-published" itemprop="datePublished">2022-01-20</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/Note/">Note</a>
+    </div>
+
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="0x01-介绍"><a href="#0x01-介绍" class="headerlink" title="0x01 介绍"></a>0x01 介绍</h2><p>本文基于frp 0.38.1版本进行的修改。</p>
+<p>克隆最新frp版本，开始进行修改，由于我是不会go的废物 基本上都是按照着大佬的文章进行修改，所以本文算是简单记录下我改的地方，和学习go的笔记，并没有什么新东西。</p>
+<h2 id="0x02-FRP流量特征修改"><a href="#0x02-FRP流量特征修改" class="headerlink" title="0x02 FRP流量特征修改"></a>0x02 FRP流量特征修改</h2><p>客户端启动时，会向服务端发送认证信息。（图中version是已被修改过的信息）</p>
+<p><img src="https://images.atsud0.me/images/post/20220115-16:51:31-_cB1G0H_aPQLzc_cB1G0H_1642236691283_cB1G0H_aPQLzc.png" alt="https://images.atsud0.me/images/post/20220115-16:51:31-_cB1G0H_aPQLzc_cB1G0H_1642236691283_cB1G0H_aPQLzc.png"></p>
+<p>修改版本号信息，<code>pkg/utils/version.go</code>处，需要注意的是如果修改的版本号过小，则会出现连接问题。（后面发现，如果这里改成0.99.99也不行，不能跨平台连接。如Winodw客户端 无法连接Linux服务端。总结：不建议改。）</p>
+<p><img src="https://images.atsud0.me/images/post/20220115-16:54:18-_F0MSBa_URIs0w_F0MSBa_1642236858170_F0MSBa_URIs0w.png" alt="https://images.atsud0.me/images/post/20220115-16:54:18-_F0MSBa_URIs0w_F0MSBa_1642236858170_F0MSBa_URIs0w.png"></p>
+<p>此外可以修改<code>pkg/msg/msg.go</code>文件处的结构体。这里定义了登录服务器以及相关的回显信息。</p>
+<p><img src="https://images.atsud0.me/images/post/20220115-18:48:33-_RHZp9p_bvHDjh_RHZp9p_1642243713245_RHZp9p_bvHDjh.png" alt="https://images.atsud0.me/images/post/20220115-18:48:33-_RHZp9p_bvHDjh_RHZp9p_1642243713245_RHZp9p_bvHDjh.png"></p>
+<p>这里简单写了个python小脚本方便替换</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"></span><br><span class="line">msg_file = <span class="string">&quot;./pkg/msg/msg.go&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(msg_file, <span class="string">&#x27;r&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f1, <span class="built_in">open</span>(<span class="string">f&quot;<span class="subst">&#123;msg_file&#125;</span>.bak&quot;</span>, <span class="string">&#x27;w+&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f2:</span><br><span class="line">    re1 = re.<span class="built_in">compile</span>(<span class="string">&quot;json:\&quot;(.*?)\&quot;&quot;</span>)</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> f1:</span><br><span class="line">        ran_str = <span class="string">&#x27;&#x27;</span>.join(random.sample(string.ascii_letters + string.digits, <span class="number">8</span>))</span><br><span class="line">        f2.write(re.sub(re1, <span class="string">f&quot;json:\&quot;<span class="subst">&#123;ran_str&#125;</span>\&quot;&quot;</span>, line))</span><br></pre></td></tr></table></figure>
+
+<p>效果</p>
+<p><img src="https://images.atsud0.me/images/post/20220115-18:45:17-_DTkGGl_oiPevl_DTkGGl_1642243517078_DTkGGl_oiPevl.png" alt="https://images.atsud0.me/images/post/20220115-18:45:17-_DTkGGl_oiPevl_DTkGGl_1642243517078_DTkGGl_oiPevl.png"></p>
+<p>但是这样显然还是很有破绽，让我们看看怎么做的更完美一点。</p>
+<h3 id="TLS-ONLY"><a href="#TLS-ONLY" class="headerlink" title="TLS_ONLY"></a>TLS_ONLY</h3><p>在不启用压缩的情况下，进行代理连接，在流量中也是能够发现攻击者连接frp的痕迹，比如这里就是</p>
+<p>6T…. ： 该连接的配置名称</p>
+<p>fsno….: 连接的源IP</p>
+<p>H8….：frps服务器的地址（这里服务器地址IP是10.0.8.5，是因为获取的服务器本机的网卡地址。如果服务器ifconfig看到的地址是公网ip，那这里就是公网ip）</p>
+<p>xlP5… : 连接的源端口</p>
+<p>29….：frps的代理端口</p>
+<p><img src="https://images.atsud0.me/images/post/20220115-19:14:17-_FPvBLC_JVX4fR_FPvBLC_1642245257345_FPvBLC_JVX4fR.png" alt="https://images.atsud0.me/images/post/20220115-19:14:17-_FPvBLC_JVX4fR_FPvBLC_1642245257345_FPvBLC_JVX4fR.png"></p>
+<p>所以我们在配置文件中打开TLS_ONLY。</p>
+<p>服务端需要在frps配置文件中设置tls_only选项。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[common]</span><br><span class="line">bind_port = frps_port</span><br><span class="line"><span class="comment">#log_file = /tmp/frps.log</span></span><br><span class="line"><span class="comment">#log_level = info</span></span><br><span class="line">token = YOUR_TOKEN</span><br><span class="line">allow_ports = frps_allow_client_open_port</span><br><span class="line">tls_only = true</span><br></pre></td></tr></table></figure>
+
+<p>同样客户端中也需要启用tls连接选项。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[common]</span><br><span class="line">server_addr = frps_addr</span><br><span class="line">server_port = frps_port</span><br><span class="line">token = YOUR_TOKEN</span><br><span class="line">tls_enable = true</span><br><span class="line"></span><br><span class="line">[sock5]</span><br><span class="line"><span class="built_in">type</span> = tcp</span><br><span class="line">remote_port = frps_open_port</span><br><span class="line">plugin = socks5</span><br></pre></td></tr></table></figure>
+
+<p>启用tls_only后再次抓包。</p>
+<p><img src="https://images.atsud0.me/images/post/20220115-19:22:55-_GqWaPr_n5CTb8_GqWaPr_1642245775654_GqWaPr_n5CTb8.png" alt="https://images.atsud0.me/images/post/20220115-19:22:55-_GqWaPr_n5CTb8_GqWaPr_1642245775654_GqWaPr_n5CTb8.png"></p>
+<h3 id="修改客户端使用Proxy的流量特征"><a href="#修改客户端使用Proxy的流量特征" class="headerlink" title="修改客户端使用Proxy的流量特征"></a>修改客户端使用Proxy的流量特征</h3><p>如果不想开启TLS选项的话，又不想在配置代理时暴露服务器IP和本机IP的话，修改<code>server/proxy/proxy.go</code>文件。把源地址和目的地址写死127.0.0.1（任君修改）。</p>
+<p><img src="https://images.atsud0.me/images/post/20220115-19:39:53-_qwl5PS_h2o2AF_qwl5PS_1642246793115_qwl5PS_h2o2AF.png" alt="https://images.atsud0.me/images/post/20220115-19:39:53-_qwl5PS_h2o2AF_qwl5PS_1642246793115_qwl5PS_h2o2AF.png"></p>
+<p>可以发现记录的源地址和目的地址已经都变成127.0.0.1了。</p>
+<p><img src="https://images.atsud0.me/images/post/20220115-19:44:02-_3DAva1_MSkBiY_3DAva1_1642247042425_3DAva1_MSkBiY.png" alt="https://images.atsud0.me/images/post/20220115-19:44:02-_3DAva1_MSkBiY_3DAva1_1642247042425_3DAva1_MSkBiY.png"></p>
+<h3 id="TLS默认字节修改"><a href="#TLS默认字节修改" class="headerlink" title="TLS默认字节修改"></a>TLS默认字节修改</h3><p>frp的建立发起的第一个包，默认是0x17。只需修改<code>pkg/util/net/tls.go</code>处的代码。</p>
+<p><img src="https://images.atsud0.me/images/post/20220116-00:43:47-_j3FdCB_txhy5Y_j3FdCB_1642265027721_j3FdCB_txhy5Y.png" alt="https://images.atsud0.me/images/post/20220116-00:43:47-_j3FdCB_txhy5Y_j3FdCB_1642265027721_j3FdCB_txhy5Y.png"></p>
+<p><img src="https://images.atsud0.me/images/post/20220116-00:42:07-_xo1sEG_yzydGl_xo1sEG_1642264927458_xo1sEG_yzydGl.png" alt="https://images.atsud0.me/images/post/20220116-00:42:07-_xo1sEG_yzydGl_xo1sEG_1642264927458_xo1sEG_yzydGl.png"></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> (</span><br><span class="line">	<span class="comment">//FRPTLSHeadByte = 0x17</span></span><br><span class="line">	FRPTLSHeadByte = <span class="number">0x88</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">WrapTLSClientConn</span><span class="params">(c net.Conn, tlsConfig *tls.Config, disableCustomTLSHeadByte <span class="type">bool</span>)</span></span> (out net.Conn) &#123;</span><br><span class="line">	<span class="keyword">if</span> !disableCustomTLSHeadByte &#123;</span><br><span class="line">		c.Write([]<span class="type">byte</span>&#123;<span class="type">byte</span>(FRPTLSHeadByte), <span class="type">byte</span>(<span class="number">0x61</span>), <span class="type">byte</span>(<span class="number">0x62</span>)&#125;)</span><br><span class="line">	&#125;</span><br><span class="line">	out = tls.Client(c, tlsConfig)</span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">CheckAndEnableTLSServerConnWithTimeout</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">	c net.Conn, tlsConfig *tls.Config, tlsOnly <span class="type">bool</span>, timeout time.Duration,</span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span> (out net.Conn, isTLS <span class="type">bool</span>, custom <span class="type">bool</span>, err <span class="type">error</span>) &#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//sc, r := gnet.NewSharedConnSize(c, 2)</span></span><br><span class="line">	sc, r := gnet.NewSharedConnSize(c, <span class="number">4</span>)</span><br><span class="line">	<span class="comment">//buf := make([]byte, 1)</span></span><br><span class="line">	buf := <span class="built_in">make</span>([]<span class="type">byte</span>, <span class="number">3</span>)</span><br><span class="line">	<span class="keyword">var</span> n <span class="type">int</span></span><br><span class="line">	c.SetReadDeadline(time.Now().Add(timeout))</span><br><span class="line">	n, err = r.Read(buf)</span><br><span class="line">	c.SetReadDeadline(time.Time&#123;&#125;)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//if n == 1 &amp;&amp; int(buf[0]) == FRPTLSHeadByte &#123;</span></span><br><span class="line">	<span class="keyword">if</span> n == <span class="number">3</span> &amp;&amp; <span class="type">int</span>(buf[<span class="number">0</span>]) == FRPTLSHeadByte &#123;</span><br><span class="line">		out = tls.Server(c, tlsConfig)</span><br><span class="line">		isTLS = <span class="literal">true</span></span><br><span class="line">		custom = <span class="literal">true</span></span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> n == <span class="number">1</span> &amp;&amp; <span class="type">int</span>(buf[<span class="number">0</span>]) == <span class="number">0x16</span> &#123;</span><br><span class="line">		out = tls.Server(sc, tlsConfig)</span><br><span class="line">		isTLS = <span class="literal">true</span></span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> tlsOnly &#123;</span><br><span class="line">			err = fmt.Errorf(<span class="string">&quot;non-TLS connection received on a TlsOnly server&quot;</span>)</span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		&#125;</span><br><span class="line">		out = sc</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到建立连接发送的第一个包已经从1字节变成了3字节。但是后面发送的一个包还是243字节。</p>
+<p><img src="https://images.atsud0.me/images/post/20220116-00:50:32-_TWNaYA_UqZn9O_TWNaYA_1642265432758_TWNaYA_UqZn9O.png" alt="https://images.atsud0.me/images/post/20220116-00:50:32-_TWNaYA_UqZn9O_TWNaYA_1642265432758_TWNaYA_UqZn9O.png"></p>
+<h2 id="0x03-功能改造"><a href="#0x03-功能改造" class="headerlink" title="0x03 功能改造"></a>0x03 功能改造</h2><h3 id="无配置文件落地-改法1"><a href="#无配置文件落地-改法1" class="headerlink" title="无配置文件落地-改法1"></a>无配置文件落地-改法1</h3><p>如果只想要无配置文件就能执行的话，可以直接照着这里改。</p>
+<p>修改文件<code>pkg/config/parse.go</code>,，修改为以下代码：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">ParseClientConfig</span><span class="params">(filePath <span class="type">string</span>)</span></span> (</span><br><span class="line">	cfg ClientCommonConf,</span><br><span class="line">	pxyCfgs <span class="keyword">map</span>[<span class="type">string</span>]ProxyConf,</span><br><span class="line">	visitorCfgs <span class="keyword">map</span>[<span class="type">string</span>]VisitorConf,</span><br><span class="line">	err <span class="type">error</span>,</span><br><span class="line">) &#123;</span><br><span class="line">	<span class="keyword">var</span> fileContent <span class="type">string</span> = <span class="string">`[common]</span></span><br><span class="line"><span class="string">	server_addr = 1.1.1.1</span></span><br><span class="line"><span class="string">	server_port = 65534</span></span><br><span class="line"><span class="string">	token = YourToken</span></span><br><span class="line"><span class="string">	tls_enable = true</span></span><br><span class="line"><span class="string">	[ssh]</span></span><br><span class="line"><span class="string">	type = tcp</span></span><br><span class="line"><span class="string">	remote_port = 60001</span></span><br><span class="line"><span class="string">	plugin = socks5</span></span><br><span class="line"><span class="string">	plugin_user = hello</span></span><br><span class="line"><span class="string">	plugin_passwd = hello</span></span><br><span class="line"><span class="string">	`</span></span><br><span class="line">	<span class="keyword">var</span> content []<span class="type">byte</span></span><br><span class="line">	content, err = GetRenderedConfFromFile(filePath)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span>&#123;</span><br><span class="line">		<span class="keyword">var</span> content []<span class="type">byte</span> = []<span class="type">byte</span>(fileContent)</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span>&#123;</span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">............</span><br><span class="line">............</span><br><span class="line">............</span><br><span class="line">............</span><br><span class="line">............</span><br><span class="line"><span class="comment">// Parse all proxy and visitor configs.</span></span><br><span class="line">	pxyCfgs, visitorCfgs, err = LoadAllProxyConfsFromIni(cfg.User, configBuffer.Bytes(), cfg.Start)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://images.atsud0.me/images/post/20220115-23:50:30-_nu3hNn_407LJp_nu3hNn_1642261830764_nu3hNn_407LJp.png" alt="https://images.atsud0.me/images/post/20220115-23:50:30-_nu3hNn_407LJp_nu3hNn_1642261830764_nu3hNn_407LJp.png"></p>
+<p>测试效果，客户端文件落地即可执行。</p>
+<p><img src="https://images.atsud0.me/images/post/20220115-23:54:54-_wFkdyQ_KbEPbw_wFkdyQ_1642262094456_wFkdyQ_KbEPbw.png" alt="https://images.atsud0.me/images/post/20220115-23:54:54-_wFkdyQ_KbEPbw_wFkdyQ_1642262094456_wFkdyQ_KbEPbw.png"></p>
+<p>但是特征特别明显，Linux下直接<code>strings</code> frpc客户端就能获取到程序硬编码的信息。</p>
+<p><img src="https://images.atsud0.me/images/post/20220116-10:15:51-_zGmFms_wUFxF7_zGmFms_1642299351060_zGmFms_wUFxF7.png" alt="https://images.atsud0.me/images/post/20220116-10:15:51-_zGmFms_wUFxF7_zGmFms_1642299351060_zGmFms_wUFxF7.png"></p>
+<p>所以可见其实配置信息硬编码进去还是不太安全，这里我能想到的办法就是加壳了，但是如果遇到会脱壳的蓝队对他们来说估计也是轻轻松松。</p>
+<h3 id="命令方式开启socks5代理"><a href="#命令方式开启socks5代理" class="headerlink" title="命令方式开启socks5代理"></a>命令方式开启socks5代理</h3><p>修改配置文件<code>cmd/frpc/sub/tcp.go</code>添加参数即可</p>
+<p><img src="https://images.atsud0.me/images/post/20220117-13:18:07-_RLZUUQ_WJvggH_RLZUUQ_1642396687332_RLZUUQ_WJvggH.png" alt="https://images.atsud0.me/images/post/20220117-13:18:07-_RLZUUQ_WJvggH_RLZUUQ_1642396687332_RLZUUQ_WJvggH.png"></p>
+<p><img src="https://images.atsud0.me/images/post/20220117-13:42:18-_pFjJJJ_JjOvff_pFjJJJ_1642398138010_pFjJJJ_JjOvff.png" alt="https://images.atsud0.me/images/post/20220117-13:42:18-_pFjJJJ_JjOvff_pFjJJJ_1642398138010_pFjJJJ_JjOvff.png"></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span></span> &#123;</span><br><span class="line">	RegisterCommonFlags(tcpCmd)</span><br><span class="line"></span><br><span class="line">	tcpCmd.PersistentFlags().StringVarP(&amp;proxyName, <span class="string">&quot;proxy_name&quot;</span>, <span class="string">&quot;n&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;proxy name&quot;</span>)</span><br><span class="line">	tcpCmd.PersistentFlags().StringVarP(&amp;localIP, <span class="string">&quot;local_ip&quot;</span>, <span class="string">&quot;i&quot;</span>, <span class="string">&quot;127.0.0.1&quot;</span>, <span class="string">&quot;local ip&quot;</span>)</span><br><span class="line">	tcpCmd.PersistentFlags().IntVarP(&amp;localPort, <span class="string">&quot;local_port&quot;</span>, <span class="string">&quot;l&quot;</span>, <span class="number">0</span>, <span class="string">&quot;local port&quot;</span>)</span><br><span class="line">	tcpCmd.PersistentFlags().IntVarP(&amp;remotePort, <span class="string">&quot;remote_port&quot;</span>, <span class="string">&quot;r&quot;</span>, <span class="number">0</span>, <span class="string">&quot;remote port&quot;</span>)</span><br><span class="line">	tcpCmd.PersistentFlags().BoolVarP(&amp;useEncryption, <span class="string">&quot;ue&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="literal">false</span>, <span class="string">&quot;use encryption&quot;</span>)</span><br><span class="line">	tcpCmd.PersistentFlags().BoolVarP(&amp;useCompression, <span class="string">&quot;uc&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="literal">false</span>, <span class="string">&quot;use compression&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">//添加这几行</span></span><br><span class="line">	tcpCmd.PersistentFlags().StringVarP(&amp;pluginName, <span class="string">&quot;plugin&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;plugins&quot;</span>)</span><br><span class="line">	tcpCmd.PersistentFlags().StringVarP(&amp;pluginUser, <span class="string">&quot;plugin_user&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;plugins user name&quot;</span>)</span><br><span class="line">	tcpCmd.PersistentFlags().StringVarP(&amp;pluginPass, <span class="string">&quot;plugin_pass&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;plguins user password&quot;</span>)</span><br><span class="line"><span class="comment">//END</span></span><br><span class="line">	rootCmd.AddCommand(tcpCmd)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> tcpCmd = &amp;cobra.Command&#123;</span><br><span class="line">	Use:   <span class="string">&quot;tcp&quot;</span>,</span><br><span class="line">	Short: <span class="string">&quot;Run frpc with a single tcp proxy&quot;</span>,</span><br><span class="line">	......</span><br><span class="line">	......</span><br><span class="line">	......</span><br><span class="line">	......</span><br><span class="line">	......</span><br><span class="line">	......</span><br><span class="line">		cfg.UseEncryption = useEncryption</span><br><span class="line">		cfg.UseCompression = useCompression</span><br><span class="line">		cfg.Plugin = pluginName</span><br><span class="line"><span class="comment">//添加这几行</span></span><br><span class="line">		<span class="keyword">if</span> cfg.Plugin != <span class="string">&quot;&quot;</span> &#123;</span><br><span class="line">			cfg.PluginParams = <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">string</span>]<span class="type">string</span>)</span><br><span class="line">			cfg.PluginParams[<span class="string">&quot;plugin_user&quot;</span>] = pluginUser</span><br><span class="line">			cfg.PluginParams[<span class="string">&quot;plugin_passwd&quot;</span>] = pluginPass</span><br><span class="line">		&#125;</span><br><span class="line"><span class="comment">//END</span></span><br><span class="line">....</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p><code>cmd/frpc/sub/root.go</code></p>
+<p><img src="https://images.atsud0.me/images/post/20220117-13:19:47-_WFNfES_z2T17J_WFNfES_1642396787195_WFNfES_z2T17J.png" alt="https://images.atsud0.me/images/post/20220117-13:19:47-_WFNfES_z2T17J_WFNfES_1642396787195_WFNfES_z2T17J.png"></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> (</span><br><span class="line">	cfgFile     <span class="type">string</span></span><br><span class="line">	showVersion <span class="type">bool</span></span><br><span class="line"></span><br><span class="line">	serverAddr      <span class="type">string</span></span><br><span class="line">	user            <span class="type">string</span></span><br><span class="line">	protocol        <span class="type">string</span></span><br><span class="line">	token           <span class="type">string</span></span><br><span class="line">	logLevel        <span class="type">string</span></span><br><span class="line">	logFile         <span class="type">string</span></span><br><span class="line">	logMaxDays      <span class="type">int</span></span><br><span class="line">	disableLogColor <span class="type">bool</span></span><br><span class="line"></span><br><span class="line">	proxyName         <span class="type">string</span></span><br><span class="line">	localIP           <span class="type">string</span></span><br><span class="line">	localPort         <span class="type">int</span></span><br><span class="line">	remotePort        <span class="type">int</span></span><br><span class="line">	useEncryption     <span class="type">bool</span></span><br><span class="line">	useCompression    <span class="type">bool</span></span><br><span class="line">	customDomains     <span class="type">string</span></span><br><span class="line">	subDomain         <span class="type">string</span></span><br><span class="line">	httpUser          <span class="type">string</span></span><br><span class="line">	httpPwd           <span class="type">string</span></span><br><span class="line">	locations         <span class="type">string</span></span><br><span class="line">	hostHeaderRewrite <span class="type">string</span></span><br><span class="line">	role              <span class="type">string</span></span><br><span class="line">	sk                <span class="type">string</span></span><br><span class="line">	multiplexer       <span class="type">string</span></span><br><span class="line">	serverName        <span class="type">string</span></span><br><span class="line">	bindAddr          <span class="type">string</span></span><br><span class="line">	bindPort          <span class="type">int</span></span><br><span class="line"></span><br><span class="line">	tlsEnable <span class="type">bool</span></span><br><span class="line"><span class="comment">//添加这几行</span></span><br><span class="line">	pluginName <span class="type">string</span></span><br><span class="line">	pluginUser <span class="type">string</span></span><br><span class="line">	pluginPass <span class="type">string</span></span><br><span class="line"><span class="comment">//END</span></span><br><span class="line">	kcpDoneCh <span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>编译后使用（感觉适合在Windows下这样用，Linux可以从进程中看到相关命令）。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./frpc tcp -s <span class="number">1.1</span><span class="number">.1</span><span class="number">.1</span>:<span class="number">7000</span> -r <span class="number">60001</span> -t YourToken  --plugin socks5 --plugin_user hello --plugin_pass <span class="number">123456</span> --tls_enable -n <span class="string">`openssl rand -base64 8`</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://images.atsud0.me/images/post/20220117-13:44:37-_FOqGSR_p2celn_FOqGSR_1642398277831_FOqGSR_p2celn.png" alt="https://images.atsud0.me/images/post/20220117-13:44:37-_FOqGSR_p2celn_FOqGSR_1642398277831_FOqGSR_p2celn.png"></p>
+<h3 id="配置文件自删除"><a href="#配置文件自删除" class="headerlink" title="配置文件自删除"></a>配置文件自删除</h3><p>既然硬编码不安全，那我们还是传配置文件吧，但是为了不让我们忘记删除配置文件，加个自动删除配置文件的功能吧。</p>
+<p>在frpc&#x2F;root.go里面进行修改，在init中注册参数，然后判断参数是否开启，开启就删除。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> (</span><br><span class="line">	cfgFile     <span class="type">string</span></span><br><span class="line">	showVersion <span class="type">bool</span></span><br><span class="line"></span><br><span class="line">	serverAddr      <span class="type">string</span></span><br><span class="line">	user            <span class="type">string</span></span><br><span class="line">	protocol        <span class="type">string</span></span><br><span class="line">	token           <span class="type">string</span></span><br><span class="line">	logLevel        <span class="type">string</span></span><br><span class="line">	logFile         <span class="type">string</span></span><br><span class="line">	logMaxDays      <span class="type">int</span></span><br><span class="line">	disableLogColor <span class="type">bool</span></span><br><span class="line"></span><br><span class="line">	proxyName         <span class="type">string</span></span><br><span class="line">	localIP           <span class="type">string</span></span><br><span class="line">	localPort         <span class="type">int</span></span><br><span class="line">	remotePort        <span class="type">int</span></span><br><span class="line">	useEncryption     <span class="type">bool</span></span><br><span class="line">	useCompression    <span class="type">bool</span></span><br><span class="line">	customDomains     <span class="type">string</span></span><br><span class="line">	subDomain         <span class="type">string</span></span><br><span class="line">	httpUser          <span class="type">string</span></span><br><span class="line">	httpPwd           <span class="type">string</span></span><br><span class="line">	locations         <span class="type">string</span></span><br><span class="line">	hostHeaderRewrite <span class="type">string</span></span><br><span class="line">	role              <span class="type">string</span></span><br><span class="line">	sk                <span class="type">string</span></span><br><span class="line">	multiplexer       <span class="type">string</span></span><br><span class="line">	serverName        <span class="type">string</span></span><br><span class="line">	bindAddr          <span class="type">string</span></span><br><span class="line">	bindPort          <span class="type">int</span></span><br><span class="line"></span><br><span class="line">	tlsEnable <span class="type">bool</span></span><br><span class="line"><span class="comment">//添加这几行</span></span><br><span class="line">	delEnable <span class="type">bool</span></span><br><span class="line"><span class="comment">//END</span></span><br><span class="line">	kcpDoneCh <span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span></span> &#123;</span><br><span class="line">	rootCmd.PersistentFlags().StringVarP(&amp;cfgFile, <span class="string">&quot;config&quot;</span>, <span class="string">&quot;c&quot;</span>, <span class="string">&quot;./frpc.ini&quot;</span>, <span class="string">&quot;config file of frpc&quot;</span>)</span><br><span class="line">	rootCmd.PersistentFlags().BoolVarP(&amp;showVersion, <span class="string">&quot;version&quot;</span>, <span class="string">&quot;v&quot;</span>, <span class="literal">false</span>, <span class="string">&quot;version of frpc&quot;</span>)</span><br><span class="line"><span class="comment">//添加这行</span></span><br><span class="line">	rootCmd.PersistentFlags().BoolVarP(&amp;delEnable, <span class="string">&quot;del_enable&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="literal">false</span>, <span class="string">&quot;enable auto delete frpc.ini&quot;</span>)</span><br><span class="line"><span class="comment">//END</span></span><br><span class="line">	kcpDoneCh = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">startService</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">	cfg config.ClientCommonConf,</span></span></span><br><span class="line"><span class="params"><span class="function">	pxyCfgs <span class="keyword">map</span>[<span class="type">string</span>]config.ProxyConf,</span></span></span><br><span class="line"><span class="params"><span class="function">	visitorCfgs <span class="keyword">map</span>[<span class="type">string</span>]config.VisitorConf,</span></span></span><br><span class="line"><span class="params"><span class="function">	cfgFile <span class="type">string</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span> (err <span class="type">error</span>) &#123;</span><br><span class="line"></span><br><span class="line">	log.InitLog(cfg.LogWay, cfg.LogFile, cfg.LogLevel,</span><br><span class="line">		cfg.LogMaxDays, cfg.DisableLogColor)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> cfg.DNSServer != <span class="string">&quot;&quot;</span> &#123;</span><br><span class="line">		s := cfg.DNSServer</span><br><span class="line">		<span class="keyword">if</span> !strings.Contains(s, <span class="string">&quot;:&quot;</span>) &#123;</span><br><span class="line">			s += <span class="string">&quot;:53&quot;</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// Change default dns server for frpc</span></span><br><span class="line">		net.DefaultResolver = &amp;net.Resolver&#123;</span><br><span class="line">			PreferGo: <span class="literal">true</span>,</span><br><span class="line">			Dial: <span class="function"><span class="keyword">func</span><span class="params">(ctx context.Context, network, address <span class="type">string</span>)</span></span> (net.Conn, <span class="type">error</span>) &#123;</span><br><span class="line">				<span class="keyword">return</span> net.Dial(<span class="string">&quot;udp&quot;</span>, s)</span><br><span class="line">			&#125;,</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	svr, errRet := client.NewService(cfg, pxyCfgs, visitorCfgs, cfgFile)</span><br><span class="line">	<span class="keyword">if</span> errRet != <span class="literal">nil</span> &#123;</span><br><span class="line">		err = errRet</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"><span class="comment">//添加这几行</span></span><br><span class="line">	<span class="keyword">if</span> delEnable == <span class="literal">true</span> &#123;</span><br><span class="line">		os.Remove(cfgFile)</span><br><span class="line">	&#125;</span><br><span class="line"><span class="comment">//END</span></span><br><span class="line">	<span class="comment">// Capture the exit signal if we use kcp.</span></span><br><span class="line">	<span class="keyword">if</span> cfg.Protocol == <span class="string">&quot;kcp&quot;</span> &#123;</span><br><span class="line">		<span class="keyword">go</span> handleSignal(svr)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	err = svr.Run()</span><br><span class="line">	<span class="keyword">if</span> err == <span class="literal">nil</span> &amp;&amp; cfg.Protocol == <span class="string">&quot;kcp&quot;</span> &#123;</span><br><span class="line">		&lt;-kcpDoneCh</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用方法：多带一个—del_enable就行，也可以给一个短参数。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./frpc --del_enable -c frpc.ini</span><br></pre></td></tr></table></figure>
+
+<h3 id="一次满足三个愿望-（无配置文件落地改法2）"><a href="#一次满足三个愿望-（无配置文件落地改法2）" class="headerlink" title="一次满足三个愿望-（无配置文件落地改法2）"></a>一次满足三个愿望-（无配置文件落地改法2）</h3><p><code>pkg/config/parse.go</code>不做任何修改，只修<code>pkg/config/value.go</code>的GetRenderedConfFromFile函数。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">GetRenderedConfFromFile</span><span class="params">(path <span class="type">string</span>)</span></span> (out []<span class="type">byte</span>, err <span class="type">error</span>) &#123;</span><br><span class="line">	<span class="keyword">var</span> b []<span class="type">byte</span></span><br><span class="line">	rawUrl := path</span><br><span class="line">	rand.Seed(time.Now().UnixNano())</span><br><span class="line">	<span class="keyword">var</span> randstr <span class="type">string</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">10</span>; i++ &#123;</span><br><span class="line">		num := rand.Intn(<span class="number">10</span>)</span><br><span class="line">		randstr += strconv.Itoa(num)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">var</span> FileContent <span class="type">string</span> = <span class="string">`[common]</span></span><br><span class="line"><span class="string">	server_addr = 1.1.1.1</span></span><br><span class="line"><span class="string">	server_port = 1234</span></span><br><span class="line"><span class="string">	token = Test</span></span><br><span class="line"><span class="string">	tls_enable = true</span></span><br><span class="line"><span class="string">	[`</span> + randstr + <span class="string">`]</span></span><br><span class="line"><span class="string">	type = tcp</span></span><br><span class="line"><span class="string">	remote_port = 60001</span></span><br><span class="line"><span class="string">	plugin = socks5</span></span><br><span class="line"><span class="string">	#plugin_user = hello</span></span><br><span class="line"><span class="string">	#plugin_passwd = hello</span></span><br><span class="line"><span class="string">	`</span></span><br><span class="line">	<span class="keyword">if</span> strings.Contains(rawUrl, <span class="string">&quot;http&quot;</span>) &#123;</span><br><span class="line">		log.Info(<span class="string">&quot;Remote Configurations&quot;</span>)</span><br><span class="line">		response, _err1 := http.Get(path)</span><br><span class="line">		<span class="keyword">if</span> _err1 != <span class="literal">nil</span> &#123;</span><br><span class="line">			log.Error(<span class="string">&quot;Remote frpc.ini not found...now load default config&quot;</span>)</span><br><span class="line">			log.Info(<span class="string">&quot;Internal Configurations&quot;</span>)</span><br><span class="line">			<span class="keyword">var</span> content []<span class="type">byte</span> = []<span class="type">byte</span>(FileContent)</span><br><span class="line">			out, err = RenderContent(content)</span><br><span class="line">			<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">				<span class="keyword">return</span></span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">defer</span> response.Body.Close()</span><br><span class="line">		body, _err := ioutil.ReadAll(response.Body)</span><br><span class="line">		<span class="keyword">if</span> _err != <span class="literal">nil</span> &#123;</span><br><span class="line">			log.Error(<span class="string">&quot;Remote frpc.ini not found...now load default config&quot;</span>)</span><br><span class="line">			log.Info(<span class="string">&quot;Internal Configurations&quot;</span>)</span><br><span class="line">			<span class="keyword">var</span> content []<span class="type">byte</span> = []<span class="type">byte</span>(FileContent)</span><br><span class="line">			out, err = RenderContent(content)</span><br><span class="line">			<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">				<span class="keyword">return</span></span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		&#125;</span><br><span class="line">		http_content := <span class="type">string</span>(body)</span><br><span class="line">		<span class="keyword">var</span> content []<span class="type">byte</span> = []<span class="type">byte</span>(http_content)</span><br><span class="line">		out, err = RenderContent(content)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		log.Info(<span class="string">&quot;Local Configurations&quot;</span>)</span><br><span class="line">		b, err = os.ReadFile(path)</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			log.Error(<span class="string">&quot;Local frpc.ini not found...now load default config&quot;</span>)</span><br><span class="line">			log.Info(<span class="string">&quot;Internal Configurations&quot;</span>)</span><br><span class="line">			<span class="keyword">var</span> content []<span class="type">byte</span> = []<span class="type">byte</span>(FileContent)</span><br><span class="line">			out, err = RenderContent(content)</span><br><span class="line">			<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">				<span class="keyword">return</span></span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		&#125;</span><br><span class="line">		local_content := <span class="type">string</span>(b)</span><br><span class="line">		<span class="keyword">var</span> content []<span class="type">byte</span> = []<span class="type">byte</span>(local_content)</span><br><span class="line">		out, err = RenderContent(content)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试效果,可以看到我当前目录下是没有frpc.ini文件的。</p>
+<p><img src="https://images.atsud0.me/images/post/20220116-02:20:03-_gmu3gi_V2MM5O_gmu3gi_1642270803570_gmu3gi_V2MM5O.png" alt="https://images.atsud0.me/images/post/20220116-02:20:03-_gmu3gi_V2MM5O_gmu3gi_1642270803570_gmu3gi_V2MM5O.png"></p>
+<p>如果不需要配置硬编码在程序里可以删除以下代码。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> FileContent <span class="type">string</span> = <span class="string">`</span></span><br><span class="line"><span class="string">........</span></span><br><span class="line"><span class="string">.......</span></span><br><span class="line"><span class="string">`</span></span><br><span class="line"> </span><br><span class="line">log.Error(<span class="string">&quot;Local frpc.ini not found...now load default config&quot;</span>)</span><br><span class="line">log.Info(<span class="string">&quot;Internal Configurations&quot;</span>)</span><br><span class="line"><span class="keyword">var</span> content []<span class="type">byte</span> = []<span class="type">byte</span>(FileContent)</span><br><span class="line">out, err = RenderContent(content)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x04-域前置隐藏frp"><a href="#0x04-域前置隐藏frp" class="headerlink" title="0x04 域前置隐藏frp"></a>0x04 域前置隐藏frp</h2><p>cs有域前置，那frp也能不能用域前置连接的。由于frp已经支持websocket的连接，所以可以直接尝试能否套cdn来连上frp服务器。</p>
+<p>测试的frpc配置文件。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[common]</span><br><span class="line">server_addr = frp.xxxxx.site # 你的域名</span><br><span class="line">server_port = <span class="number">8080</span></span><br><span class="line">token = YourToken</span><br><span class="line">#tls_enable = <span class="literal">true</span> #这里关闭TLS的原因是方便调试，正常使用请打开。</span><br><span class="line">protocol = websocket</span><br><span class="line"></span><br><span class="line">[test_sock5]</span><br><span class="line"><span class="keyword">type</span> = tcp</span><br><span class="line">remote_port = <span class="number">60001</span></span><br><span class="line">plugin = socks5</span><br><span class="line">use_encryption = <span class="literal">true</span></span><br><span class="line">use_compression = <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>发现是可以连接上的，这也在某种程度上说明了域前置是可行的。</p>
+<p><img src="https://images.atsud0.me/images/post/20220118-20:56:12-_Juz35M_atgqwZ_Juz35M_1642510572406_Juz35M_atgqwZ.png" alt="https://images.atsud0.me/images/post/20220118-20:56:12-_Juz35M_atgqwZ_Juz35M_1642510572406_Juz35M_atgqwZ.png"></p>
+<p>其次，由于连接的特征<code>~!frp</code>过于明显，所以我们可以修改成其他的，比如什么<code>/~!json</code>,甚至是其他常见目录。由于使用的是websocket，所以如果要使用域前置的话，CDN要选择支持websocket协议的厂商，比如fastly就不行。</p>
+<p>由于frp的websocket实现是引用了其他依赖库(<code>net@v0.0.0xxxxx/websocket/</code>)，所以需要修改依赖库。这里比较麻烦，这里我修改的虽然能实现域前置功能，但是存在一些小问题。思路大致就是客户端添加一个配置选项，可以指定连接的host头，原有的server_addr配置就是域前置多地ping找到的ip或者是域名。修改的地方比较多，可以直接看修改后的源码。这里就不一步步贴图了。</p>
+<p><img src="https://images.atsud0.me/images/post/20220120-16:19:10-_V3EqTc_mf41EO_V3EqTc_1642666750508_V3EqTc_mf41EO.png" alt="https://images.atsud0.me/images/post/20220120-16:19:10-_V3EqTc_mf41EO_V3EqTc_1642666750508_V3EqTc_mf41EO.png"></p>
+<p>调用链</p>
+<p><img src="https://images.atsud0.me/images/post/20220120-17:06:31-_5ipo6Y_WjgknA_5ipo6Y_1642669591717_5ipo6Y_WjgknA.png" alt="https://images.atsud0.me/images/post/20220120-17:06:31-_5ipo6Y_WjgknA_5ipo6Y_1642669591717_5ipo6Y_WjgknA.png"></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[common]</span><br><span class="line">server_addr = CDNIP/域名</span><br><span class="line">server_port = <span class="number">80</span></span><br><span class="line">token = YourToken</span><br><span class="line">#tls_enable = <span class="literal">true</span></span><br><span class="line">protocol = websocket</span><br><span class="line">websocket_domain = 回源域名</span><br><span class="line"></span><br><span class="line">[test_sock5]</span><br><span class="line"><span class="keyword">type</span> = tcp</span><br><span class="line">remote_port = <span class="number">60001</span></span><br><span class="line">plugin = socks5</span><br><span class="line">use_encryption = <span class="literal">true</span></span><br><span class="line">use_compression = <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>实现效果：</p>
+<p><img src="https://images.atsud0.me/images/post/20220120-16:27:31-_p7fHgn_0MqPbE_p7fHgn_1642667251049_p7fHgn_0MqPbE.jpg" alt="https://images.atsud0.me/images/post/20220120-16:27:31-_p7fHgn_0MqPbE_p7fHgn_1642667251049_p7fHgn_0MqPbE.jpg"></p>
+<p><img src="https://images.atsud0.me/images/post/20220120-16:26:44-_lljH1O_59MI5e_lljH1O_1642667204858_lljH1O_59MI5e.png" alt="https://images.atsud0.me/images/post/20220120-16:26:44-_lljH1O_59MI5e_lljH1O_1642667204858_lljH1O_59MI5e.png"></p>
+<h3 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h3><h4 id="问题1-闲置断连"><a href="#问题1-闲置断连" class="headerlink" title="问题1-闲置断连"></a>问题1-闲置断连</h4><p>在测试过程中发现，如果代理闲置了10秒就发送心跳包，但是可能由于域前置的问题，发送的心跳包有问题，导致断连，但是一直在用的话倒是不影响使用？</p>
+<p><img src="https://images.atsud0.me/images/post/20220120-17:32:06-_Fj2s4T_Untitled-frp_Fj2s4T_1642671126256_Fj2s4T_Untitled-frp.png" alt="20220120-17:32:06-_Fj2s4T_Untitled-frp_Fj2s4T_1642671126256_Fj2s4T_Untitled-frp"></p>
+<p>尝试修改了心跳和超时相关的配置文件，但是没有用。不过看到注释有个todo，感觉这个思路是可以解决的。自己进行了一些修改和调试，但是还是无法解决，只能等官方实现后再尝试。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// TODO(fatedier): disable heartbeat if TCPMux is enabled.</span></span><br></pre></td></tr></table></figure>
+
+<p>这个问题如果无法解决的话，就有点怪。因为流量设备上面可能会看到客户端 10秒左右 请求一次 <code>http://CDN地址/frpsocket</code> 。</p>
+<h4 id="问题2-CDN缓存"><a href="#问题2-CDN缓存" class="headerlink" title="问题2-CDN缓存"></a>问题2-CDN缓存</h4><p>在修改websocket请求的路径后，刚编译完成是可以使用的。下班后，第二天上班再测试就使用不了，后来重新改了一下请求的路径又能用了。我猜是cdn缓存的问题。所以每次使用前还得重编译一下，这也太麻烦了，不过我觉得关闭cdn的缓存机制，可能可以解决。</p>
+<h3 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h3><p>在添加域前置功能后，前面说的无配置文件落地，和命令行执行都可以不担心泄露服务器的真实ip进行使用了。但是目前的问题1 闲置断连的情况，以我这浅薄的go代码能力暂时无法解决这个问题，只能等frp官方实现客户端禁用心跳的功能再试试了。</p>
+<h2 id="0x05-压缩体积-amp-代码混淆"><a href="#0x05-压缩体积-amp-代码混淆" class="headerlink" title="0x05 压缩体积&amp;代码混淆"></a>0x05 压缩体积&amp;代码混淆</h2><p>因为一般就Windows有杀软，所以这里用windows平台的作为演示，在不做任何修改的情况下，编译出来丢上vt的结果，发现卡巴总是能精确的查杀到frp的特征。</p>
+<p><img src="https://images.atsud0.me/images/post/20220118-14:54:03-_WpbaQh_NXulMk_WpbaQh_1642488843723_WpbaQh_NXulMk.png" alt="https://images.atsud0.me/images/post/20220118-14:54:03-_WpbaQh_NXulMk_WpbaQh_1642488843723_WpbaQh_NXulMk.png"></p>
+<p>upx套个壳。虽然能把体积压缩到3-4M，但是查杀率提升了。</p>
+<p><img src="https://images.atsud0.me/images/post/20220118-14:59:30-_N81AtY_toKvRT_N81AtY_1642489170431_N81AtY_toKvRT.png" alt="https://images.atsud0.me/images/post/20220118-14:59:30-_N81AtY_toKvRT_N81AtY_1642489170431_N81AtY_toKvRT.png"></p>
+<p>我这边尝试了代码混淆不加壳的方式进行了一次查杀，可以发现和前面不加壳的对比，还是挺明显的。。</p>
+<p><img src="https://images.atsud0.me/images/post/20220118-15:03:10-_AesSFV_zeKgK5_AesSFV_1642489390727_AesSFV_zeKgK5.png" alt="https://images.atsud0.me/images/post/20220118-15:03:10-_AesSFV_zeKgK5_AesSFV_1642489390727_AesSFV_zeKgK5.png"></p>
+<p>代码混淆+加UPX壳。主流杀软也不报，看起来还行。</p>
+<p>加了<code>upx</code>壳之后，可以直接使用<code>upx -d</code>脱壳。但是可以用winhex等工具把诸如upx1、upx2、upx0、upx!等用00替换后，就无法直接使用<code>upx -d</code>脱壳了。如图，去除了upx特征的exe。</p>
+<p><img src="https://images.atsud0.me/images/post/20220118-17:53:02-_FqxEDB_obKUDi_FqxEDB_1642499582654_FqxEDB_obKUDi.png" alt="https://images.atsud0.me/images/post/20220118-17:53:02-_FqxEDB_obKUDi_FqxEDB_1642499582654_FqxEDB_obKUDi.png"></p>
+<p>由于域前置问题解决不了心态崩了，没有测试动态免杀效果。</p>
+<h2 id="0x06-参考链接"><a href="#0x06-参考链接" class="headerlink" title="0x06 参考链接"></a>0x06 参考链接</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://uknowsec.cn/posts/notes/FRP%E6%94%B9%E9%80%A0%E8%AE%A1%E5%88%92.html">https://uknowsec.cn/posts/notes/FRP改造计划.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://uknowsec.cn/posts/notes/FRP%E6%94%B9%E9%80%A0%E8%AE%A1%E5%88%92%E7%BB%AD.html">https://uknowsec.cn/posts/notes/FRP改造计划续.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/evilashz/frpBuilder">https://github.com/evilashz/frpBuilder</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/231424#h2-8">https://www.anquanke.com/post/id/231424</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/231685">https://www.anquanke.com/post/id/231685</a></li>
+<li><a target="_blank" rel="noopener" href="https://sec.lz520520.com/2020/11/566/">https://sec.lz520520.com/2020/11/566/</a></li>
+</ul>
+<p>修改之后的源码：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/atsud0/frp-modify">https://github.com/atsud0/frp-modify</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/links/">Friends</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/atsud0">Github</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">0x01 介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-FRP%E6%B5%81%E9%87%8F%E7%89%B9%E5%BE%81%E4%BF%AE%E6%94%B9"><span class="toc-number">2.</span> <span class="toc-text">0x02 FRP流量特征修改</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TLS-ONLY"><span class="toc-number">2.1.</span> <span class="toc-text">TLS_ONLY</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%BD%BF%E7%94%A8Proxy%E7%9A%84%E6%B5%81%E9%87%8F%E7%89%B9%E5%BE%81"><span class="toc-number">2.2.</span> <span class="toc-text">修改客户端使用Proxy的流量特征</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TLS%E9%BB%98%E8%AE%A4%E5%AD%97%E8%8A%82%E4%BF%AE%E6%94%B9"><span class="toc-number">2.3.</span> <span class="toc-text">TLS默认字节修改</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-%E5%8A%9F%E8%83%BD%E6%94%B9%E9%80%A0"><span class="toc-number">3.</span> <span class="toc-text">0x03 功能改造</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A0%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%90%BD%E5%9C%B0-%E6%94%B9%E6%B3%951"><span class="toc-number">3.1.</span> <span class="toc-text">无配置文件落地-改法1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%96%B9%E5%BC%8F%E5%BC%80%E5%90%AFsocks5%E4%BB%A3%E7%90%86"><span class="toc-number">3.2.</span> <span class="toc-text">命令方式开启socks5代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%87%AA%E5%88%A0%E9%99%A4"><span class="toc-number">3.3.</span> <span class="toc-text">配置文件自删除</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E6%AC%A1%E6%BB%A1%E8%B6%B3%E4%B8%89%E4%B8%AA%E6%84%BF%E6%9C%9B-%EF%BC%88%E6%97%A0%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%90%BD%E5%9C%B0%E6%94%B9%E6%B3%952%EF%BC%89"><span class="toc-number">3.4.</span> <span class="toc-text">一次满足三个愿望-（无配置文件落地改法2）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-%E5%9F%9F%E5%89%8D%E7%BD%AE%E9%9A%90%E8%97%8Ffrp"><span class="toc-number">4.</span> <span class="toc-text">0x04 域前置隐藏frp</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">4.1.</span> <span class="toc-text">存在的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%97%AE%E9%A2%981-%E9%97%B2%E7%BD%AE%E6%96%AD%E8%BF%9E"><span class="toc-number">4.1.1.</span> <span class="toc-text">问题1-闲置断连</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%97%AE%E9%A2%982-CDN%E7%BC%93%E5%AD%98"><span class="toc-number">4.1.2.</span> <span class="toc-text">问题2-CDN缓存</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%9D%E8%80%83"><span class="toc-number">4.2.</span> <span class="toc-text">思考</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05-%E5%8E%8B%E7%BC%A9%E4%BD%93%E7%A7%AF-amp-%E4%BB%A3%E7%A0%81%E6%B7%B7%E6%B7%86"><span class="toc-number">5.</span> <span class="toc-text">0x05 压缩体积&amp;代码混淆</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x06-%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">6.</span> <span class="toc-text">0x06 参考链接</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://atsud0.me/2022/01/FRP%E6%94%B9%E9%80%A0%E7%AC%94%E8%AE%B0/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://atsud0.me/2022/01/FRP%E6%94%B9%E9%80%A0%E7%AC%94%E8%AE%B0/&text=FRP改造笔记"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://atsud0.me/2022/01/FRP%E6%94%B9%E9%80%A0%E7%AC%94%E8%AE%B0/&title=FRP改造笔记"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=FRP改造笔记&body=Check out this article: https://atsud0.me/2022/01/FRP%E6%94%B9%E9%80%A0%E7%AC%94%E8%AE%B0/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://atsud0.me/2022/01/FRP%E6%94%B9%E9%80%A0%E7%AC%94%E8%AE%B0/&title=FRP改造笔记"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://atsud0.me/2022/01/FRP%E6%94%B9%E9%80%A0%E7%AC%94%E8%AE%B0/&name=FRP改造笔记&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://atsud0.me/2022/01/FRP%E6%94%B9%E9%80%A0%E7%AC%94%E8%AE%B0/&t=FRP改造笔记"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2024
+    atsud0
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/links/">Friends</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/atsud0">Github</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "069018536ef0421ebc5bb5e449328773"}'></script>
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

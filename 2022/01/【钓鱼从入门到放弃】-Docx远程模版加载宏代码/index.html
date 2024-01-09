@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="0x01 前言此方法利用创建一个DOCX文档，并使用远程加载DOTM模板文件去执行恶意宏命令。 0x02 利用制作恶意远程宏模版Attacks→Packages→MS Office Macro  复制获取到的VB代码后打开word 勾选开发工具选项  开启开发工具后，将该文档另存为 dotm 宏模版文件。打开 开发工具→Visual basic复制恶意代码到ThisDocument （这里用的演示">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【钓鱼从入门到放弃】-Docx远程模版加载宏代码">
+<meta property="og:url" content="https://atsud0.me/2022/01/%E3%80%90%E9%92%93%E9%B1%BC%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83%E3%80%91-Docx%E8%BF%9C%E7%A8%8B%E6%A8%A1%E7%89%88%E5%8A%A0%E8%BD%BD%E5%AE%8F%E4%BB%A3%E7%A0%81/index.html">
+<meta property="og:site_name" content="雪之下二丁目鹤岗八幡宫">
+<meta property="og:description" content="0x01 前言此方法利用创建一个DOCX文档，并使用远程加载DOTM模板文件去执行恶意宏命令。 0x02 利用制作恶意远程宏模版Attacks→Packages→MS Office Macro  复制获取到的VB代码后打开word 勾选开发工具选项  开启开发工具后，将该文档另存为 dotm 宏模版文件。打开 开发工具→Visual basic复制恶意代码到ThisDocument （这里用的演示">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220126-16:07:34-_22dOyE_MsoTS6_22dOyE_1643184454324_22dOyE_MsoTS6.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220126-16:11:18-_cAt8Cc_4qaS3H_cAt8Cc_1643184678585_cAt8Cc_4qaS3H.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220126-16:33:39-_pWXqMl_1AB0N5_pWXqMl_1643186019732_pWXqMl_1AB0N5.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220126-16:45:15-_AiTMmn_yPjBJe_AiTMmn_1643186715970_AiTMmn_yPjBJe.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220126-16:48:09-_MDaf4Q_OlVJah_MDaf4Q_1643186889126_MDaf4Q_OlVJah.png">
+<meta property="og:image" content="https://images.atsud0.me/images/post/20220126-16:50:28-_rgA2K5_jFMt9t_rgA2K5_1643187028601_rgA2K5_jFMt9t.png">
+<meta property="article:published_time" content="2022-01-26T10:08:17.000Z">
+<meta property="article:modified_time" content="2022-12-06T07:29:22.000Z">
+<meta property="article:author" content="atsud0">
+<meta property="article:tag" content="Pishing">
+<meta property="article:tag" content="Office">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://images.atsud0.me/images/post/20220126-16:07:34-_22dOyE_MsoTS6_22dOyE_1643184454324_22dOyE_MsoTS6.png">
+    
+    
+      
+        
+          
+            <link rel="shortcut icon" href="https://www.gravatar.com/avatar/833e6979e17dd10aebe34f34c0fd5f7d?s=48">
+          
+        
+      
+      
+        
+          
+            <link rel="icon" type="image/png" href="https://www.gravatar.com/avatar/833e6979e17dd10aebe34f34c0fd5f7d?s=192" sizes="192x192">
+          
+        
+      
+      
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="https://www.gravatar.com/avatar/833e6979e17dd10aebe34f34c0fd5f7d?s=180">
+          
+        
+      
+    
+    <!-- title -->
+    <title>【钓鱼从入门到放弃】-Docx远程模版加载宏代码</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-163969429-1"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-163969429-1');
+  </script>
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="雪之下二丁目鹤岗八幡宫" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/links/">Friends</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/atsud0">Github</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2022/02/Windows-TelemetryController%E6%9D%83%E9%99%90%E7%BB%B4%E6%8C%81%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2022/01/%E3%80%90%E9%92%93%E9%B1%BC%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83%E3%80%91-RTF%E6%96%87%E6%A1%A3/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://atsud0.me/2022/01/%E3%80%90%E9%92%93%E9%B1%BC%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83%E3%80%91-Docx%E8%BF%9C%E7%A8%8B%E6%A8%A1%E7%89%88%E5%8A%A0%E8%BD%BD%E5%AE%8F%E4%BB%A3%E7%A0%81/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://atsud0.me/2022/01/%E3%80%90%E9%92%93%E9%B1%BC%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83%E3%80%91-Docx%E8%BF%9C%E7%A8%8B%E6%A8%A1%E7%89%88%E5%8A%A0%E8%BD%BD%E5%AE%8F%E4%BB%A3%E7%A0%81/&text=【钓鱼从入门到放弃】-Docx远程模版加载宏代码"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://atsud0.me/2022/01/%E3%80%90%E9%92%93%E9%B1%BC%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83%E3%80%91-Docx%E8%BF%9C%E7%A8%8B%E6%A8%A1%E7%89%88%E5%8A%A0%E8%BD%BD%E5%AE%8F%E4%BB%A3%E7%A0%81/&title=【钓鱼从入门到放弃】-Docx远程模版加载宏代码"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【钓鱼从入门到放弃】-Docx远程模版加载宏代码&body=Check out this article: https://atsud0.me/2022/01/%E3%80%90%E9%92%93%E9%B1%BC%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83%E3%80%91-Docx%E8%BF%9C%E7%A8%8B%E6%A8%A1%E7%89%88%E5%8A%A0%E8%BD%BD%E5%AE%8F%E4%BB%A3%E7%A0%81/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://atsud0.me/2022/01/%E3%80%90%E9%92%93%E9%B1%BC%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83%E3%80%91-Docx%E8%BF%9C%E7%A8%8B%E6%A8%A1%E7%89%88%E5%8A%A0%E8%BD%BD%E5%AE%8F%E4%BB%A3%E7%A0%81/&title=【钓鱼从入门到放弃】-Docx远程模版加载宏代码"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://atsud0.me/2022/01/%E3%80%90%E9%92%93%E9%B1%BC%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83%E3%80%91-Docx%E8%BF%9C%E7%A8%8B%E6%A8%A1%E7%89%88%E5%8A%A0%E8%BD%BD%E5%AE%8F%E4%BB%A3%E7%A0%81/&name=【钓鱼从入门到放弃】-Docx远程模版加载宏代码&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://atsud0.me/2022/01/%E3%80%90%E9%92%93%E9%B1%BC%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83%E3%80%91-Docx%E8%BF%9C%E7%A8%8B%E6%A8%A1%E7%89%88%E5%8A%A0%E8%BD%BD%E5%AE%8F%E4%BB%A3%E7%A0%81/&t=【钓鱼从入门到放弃】-Docx远程模版加载宏代码"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0x01-%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">0x01 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x02-%E5%88%A9%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">0x02 利用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%B6%E4%BD%9C%E6%81%B6%E6%84%8F%E8%BF%9C%E7%A8%8B%E5%AE%8F%E6%A8%A1%E7%89%88"><span class="toc-number">2.1.</span> <span class="toc-text">制作恶意远程宏模版</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%B6%E4%BD%9C%E8%BF%9C%E7%A8%8B%E5%8A%A0%E8%BD%BD%E6%81%B6%E6%84%8F%E5%AE%8F%E6%A8%A1%E7%89%88%E7%9A%84docx%E6%96%87%E4%BB%B6"><span class="toc-number">2.2.</span> <span class="toc-text">制作远程加载恶意宏模版的docx文件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x03-%E6%80%BB%E7%BB%93"><span class="toc-number">3.</span> <span class="toc-text">0x03 总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4"><span class="toc-number">3.1.</span> <span class="toc-text">步骤</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x04-%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">4.</span> <span class="toc-text">0x04 参考链接</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        【钓鱼从入门到放弃】-Docx远程模版加载宏代码
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">atsud0</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-01-26T10:08:17.000Z" class="dt-published" itemprop="datePublished">2022-01-26</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/Note/">Note</a> › <a class="category-link" href="/categories/Note/%E9%92%93%E9%B1%BC/">钓鱼</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/Office/" rel="tag">Office</a>, <a class="p-category" href="/tags/Pishing/" rel="tag">Pishing</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h1><p>此方法利用创建一个DOCX文档，并使用远程加载DOTM模板文件去执行恶意宏命令。</p>
+<h1 id="0x02-利用"><a href="#0x02-利用" class="headerlink" title="0x02 利用"></a>0x02 利用</h1><h2 id="制作恶意远程宏模版"><a href="#制作恶意远程宏模版" class="headerlink" title="制作恶意远程宏模版"></a>制作恶意远程宏模版</h2><p>Attacks→Packages→MS Office Macro</p>
+<p><img src="https://images.atsud0.me/images/post/20220126-16:07:34-_22dOyE_MsoTS6_22dOyE_1643184454324_22dOyE_MsoTS6.png" alt="https://images.atsud0.me/images/post/20220126-16:07:34-_22dOyE_MsoTS6_22dOyE_1643184454324_22dOyE_MsoTS6.png"></p>
+<p>复制获取到的VB代码后打开word 勾选开发工具选项</p>
+<p><img src="https://images.atsud0.me/images/post/20220126-16:11:18-_cAt8Cc_4qaS3H_cAt8Cc_1643184678585_cAt8Cc_4qaS3H.png" alt="https://images.atsud0.me/images/post/20220126-16:11:18-_cAt8Cc_4qaS3H_cAt8Cc_1643184678585_cAt8Cc_4qaS3H.png"></p>
+<p>开启开发工具后，将该文档另存为 <code>dotm</code> 宏模版文件。打开 开发工具→Visual basic复制恶意代码到<code>ThisDocument</code> （这里用的演示代码是弹计算器。）</p>
+<p><img src="https://images.atsud0.me/images/post/20220126-16:33:39-_pWXqMl_1AB0N5_pWXqMl_1643186019732_pWXqMl_1AB0N5.png" alt="https://images.atsud0.me/images/post/20220126-16:33:39-_pWXqMl_1AB0N5_pWXqMl_1643186019732_pWXqMl_1AB0N5.png"></p>
+<p>在恶意模版文件上，新建文件后启用宏。正常运行。</p>
+<h2 id="制作远程加载恶意宏模版的docx文件"><a href="#制作远程加载恶意宏模版的docx文件" class="headerlink" title="制作远程加载恶意宏模版的docx文件"></a>制作远程加载恶意宏模版的docx文件</h2><p>将刚刚制作好的恶意模版文件部署到服务器后，新建word文件随便选择一个模版使用保存文件。另存为后，修改为zip后缀，进行解压。</p>
+<p><img src="https://images.atsud0.me/images/post/20220126-16:45:15-_AiTMmn_yPjBJe_AiTMmn_1643186715970_AiTMmn_yPjBJe.png" alt="https://images.atsud0.me/images/post/20220126-16:45:15-_AiTMmn_yPjBJe_AiTMmn_1643186715970_AiTMmn_yPjBJe.png"></p>
+<p>路径 word_rels,找到settings.xml.rels文件，修改Target属性。</p>
+<p><img src="https://images.atsud0.me/images/post/20220126-16:48:09-_MDaf4Q_OlVJah_MDaf4Q_1643186889126_MDaf4Q_OlVJah.png" alt="https://images.atsud0.me/images/post/20220126-16:48:09-_MDaf4Q_OlVJah_MDaf4Q_1643186889126_MDaf4Q_OlVJah.png"></p>
+<p>修改好后，用zip重新压缩回去，并重新命名后缀为docx。</p>
+<p><img src="https://images.atsud0.me/images/post/20220126-16:50:28-_rgA2K5_jFMt9t_rgA2K5_1643187028601_rgA2K5_jFMt9t.png" alt="https://images.atsud0.me/images/post/20220126-16:50:28-_rgA2K5_jFMt9t_rgA2K5_1643187028601_rgA2K5_jFMt9t.png"></p>
+<p>启用宏即可正常运行。</p>
+<h1 id="0x03-总结"><a href="#0x03-总结" class="headerlink" title="0x03 总结"></a>0x03 总结</h1><h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><p>docx远程加载宏的利用步骤简述如下</p>
+<ol>
+<li>制作包含宏的恶意模版文件（.dotm）。</li>
+<li>将恶意模版文件上传至服务器。如Github等公共文件平台。</li>
+<li>新建并保存一个使用任意模版的docx文件。</li>
+<li>解压docx文件，修改 <code>word\_rels\settings.xml.rels</code>文件的Target属性，将其指向部署恶意模版文件的服务器。</li>
+<li>使用zip格式压缩文件，并重新命名后缀为docx。</li>
+<li>重新打开docx文件，并启用宏。</li>
+</ol>
+<p>docx文件无法执行宏代码，发送docx文件可使对方放松警惕。加上使用公共平台去托管恶意文件减少暴露服务器的几率。</p>
+<h1 id="0x04-参考链接"><a href="#0x04-参考链接" class="headerlink" title="0x04 参考链接"></a>0x04 参考链接</h1><ul>
+<li><a target="_blank" rel="noopener" href="http://blog.redxorblue.com/2018/07/executing-macros-from-docx-with-remote.html">Executing Macros From a DOCX With Remote Template Injection</a></li>
+<li><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/2496">利用DOCX文档远程模板注入执行宏</a></li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/links/">Friends</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/atsud0">Github</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0x01-%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">0x01 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x02-%E5%88%A9%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">0x02 利用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%B6%E4%BD%9C%E6%81%B6%E6%84%8F%E8%BF%9C%E7%A8%8B%E5%AE%8F%E6%A8%A1%E7%89%88"><span class="toc-number">2.1.</span> <span class="toc-text">制作恶意远程宏模版</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%B6%E4%BD%9C%E8%BF%9C%E7%A8%8B%E5%8A%A0%E8%BD%BD%E6%81%B6%E6%84%8F%E5%AE%8F%E6%A8%A1%E7%89%88%E7%9A%84docx%E6%96%87%E4%BB%B6"><span class="toc-number">2.2.</span> <span class="toc-text">制作远程加载恶意宏模版的docx文件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x03-%E6%80%BB%E7%BB%93"><span class="toc-number">3.</span> <span class="toc-text">0x03 总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4"><span class="toc-number">3.1.</span> <span class="toc-text">步骤</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x04-%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">4.</span> <span class="toc-text">0x04 参考链接</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://atsud0.me/2022/01/%E3%80%90%E9%92%93%E9%B1%BC%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83%E3%80%91-Docx%E8%BF%9C%E7%A8%8B%E6%A8%A1%E7%89%88%E5%8A%A0%E8%BD%BD%E5%AE%8F%E4%BB%A3%E7%A0%81/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://atsud0.me/2022/01/%E3%80%90%E9%92%93%E9%B1%BC%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83%E3%80%91-Docx%E8%BF%9C%E7%A8%8B%E6%A8%A1%E7%89%88%E5%8A%A0%E8%BD%BD%E5%AE%8F%E4%BB%A3%E7%A0%81/&text=【钓鱼从入门到放弃】-Docx远程模版加载宏代码"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://atsud0.me/2022/01/%E3%80%90%E9%92%93%E9%B1%BC%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83%E3%80%91-Docx%E8%BF%9C%E7%A8%8B%E6%A8%A1%E7%89%88%E5%8A%A0%E8%BD%BD%E5%AE%8F%E4%BB%A3%E7%A0%81/&title=【钓鱼从入门到放弃】-Docx远程模版加载宏代码"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【钓鱼从入门到放弃】-Docx远程模版加载宏代码&body=Check out this article: https://atsud0.me/2022/01/%E3%80%90%E9%92%93%E9%B1%BC%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83%E3%80%91-Docx%E8%BF%9C%E7%A8%8B%E6%A8%A1%E7%89%88%E5%8A%A0%E8%BD%BD%E5%AE%8F%E4%BB%A3%E7%A0%81/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://atsud0.me/2022/01/%E3%80%90%E9%92%93%E9%B1%BC%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83%E3%80%91-Docx%E8%BF%9C%E7%A8%8B%E6%A8%A1%E7%89%88%E5%8A%A0%E8%BD%BD%E5%AE%8F%E4%BB%A3%E7%A0%81/&title=【钓鱼从入门到放弃】-Docx远程模版加载宏代码"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://atsud0.me/2022/01/%E3%80%90%E9%92%93%E9%B1%BC%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83%E3%80%91-Docx%E8%BF%9C%E7%A8%8B%E6%A8%A1%E7%89%88%E5%8A%A0%E8%BD%BD%E5%AE%8F%E4%BB%A3%E7%A0%81/&name=【钓鱼从入门到放弃】-Docx远程模版加载宏代码&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://atsud0.me/2022/01/%E3%80%90%E9%92%93%E9%B1%BC%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83%E3%80%91-Docx%E8%BF%9C%E7%A8%8B%E6%A8%A1%E7%89%88%E5%8A%A0%E8%BD%BD%E5%AE%8F%E4%BB%A3%E7%A0%81/&t=【钓鱼从入门到放弃】-Docx远程模版加载宏代码"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2024
+    atsud0
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/links/">Friends</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/atsud0">Github</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "069018536ef0421ebc5bb5e449328773"}'></script>
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
